@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react';
 import athleteSprite from '../assets/athlete-sprite.png';
+import trackTile from '../assets/track-tile.png';
+
 
 export default function TrackCanvas() {
   const canvasRef = useRef(null);
@@ -33,6 +35,7 @@ export default function TrackCanvas() {
     sprite.current.onload = () => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
+    //   ctx.imageSmoothingEnabled = false;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
@@ -43,6 +46,14 @@ export default function TrackCanvas() {
       const fps = 8;
       const frameDuration = 1000 / fps;
       let currentRunningFrameIndex = 0;
+
+      const background = new Image();
+      background.src = trackTile;
+
+      background.onload = () => {
+        requestAnimationFrame(draw); // ✅ START animation only when track is ready
+      };
+
 
       const draw = (timestamp) => {
         const dx = mousePos.current.x - runnerPos.current.x;
@@ -111,13 +122,40 @@ export default function TrackCanvas() {
         const sx = (frame.current % gridCols) * frameWidth;
         const sy = Math.floor(frame.current / gridCols) * frameHeight;
 
-        const drawWidth = frameWidth * scale;
-        const drawHeight = frameHeight * scale;
-
+        
         // Clear and draw
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#d23f3f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Calculate scale to match canvas height (after rotation)
+        const scaledHeight = canvas.height;
+        const bgScale = scaledHeight / background.width; // because width becomes height after rotation
+        const scaledWidth = background.height * bgScale; // keep aspect ratio
+
+        const drawWidth = frameWidth * scale;
+        const drawHeight = frameHeight * scale;
+        
+        // Tile horizontally across the canvas
+        for (let x = 0; x < canvas.width; x += scaledWidth) {
+        ctx.save();
+
+        // Translate to top-left corner of where the tile should appear
+        ctx.translate(x, 0);
+
+        // Rotate 90 degrees clockwise
+        ctx.rotate(Math.PI / 2);
+
+        // Draw with scaling applied
+        ctx.drawImage(
+            background,
+            0, 0,
+            background.width, background.height,
+            0, -scaledHeight, // draw upward after rotation
+            background.width * bgScale,
+            background.height * bgScale
+        );
+
+        ctx.restore();
+        }
 
         ctx.save();
 
@@ -146,7 +184,7 @@ export default function TrackCanvas() {
         requestAnimationFrame(draw);
       };
 
-      requestAnimationFrame(draw);
+    //   requestAnimationFrame(draw);
     };
 
     return () => {
