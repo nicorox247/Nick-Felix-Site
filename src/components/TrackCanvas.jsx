@@ -5,22 +5,29 @@ export default function TrackCanvas() {
   const canvasRef = useRef(null);
   const sprite = useRef(new Image());
   const frame = useRef(1);
-  const mousePos = useRef({ x: 100, y: 100 });
-  const prevMousePos = useRef({ x: 100, y: 100 });
-  const isMoving = useRef(false);
-  const lastDirection = useRef(1); // 1 = right, -1 = left
 
-  // These are the grid indices of the running frames in the 2x3 sprite sheet
-  const runningFrameIndices = [1, 2, 3, 4]; // frame 0 = idle
+  const mousePos = useRef({ x: 100, y: 100 });
+  const runnerPos = useRef({ x: 100, y: 100 });
+  const isMoving = useRef(false);
+  const lastDirection = useRef(1);
+  const lastMouseDelta = useRef({ x: 0, y: 0 });
+  const lastChangeTimestamp = useRef(Date.now());
+
+  const runningFrameIndices = [1, 2, 3, 4];
   const gridCols = 2;
-  const scale = 2;
+  const scale = 1.5;
 
   useEffect(() => {
     sprite.current.src = athleteSprite;
 
     const updateMouse = (e) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
-    };
+        const rect = canvasRef.current.getBoundingClientRect();
+        mousePos.current = {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        };
+      };
+      
     window.addEventListener('mousemove', updateMouse);
 
     sprite.current.onload = () => {
@@ -38,25 +45,65 @@ export default function TrackCanvas() {
       let currentRunningFrameIndex = 0;
 
       const draw = (timestamp) => {
-        // Detect movement
-        const dx = mousePos.current.x - prevMousePos.current.x;
-        const dy = mousePos.current.y - prevMousePos.current.y;
+        const dx = mousePos.current.x - runnerPos.current.x;
+        const dy = mousePos.current.y - runnerPos.current.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        isMoving.current = distance > 1;
-        prevMousePos.current = { ...mousePos.current };
 
-        // Update direction
+        // Normalize current direction
+        const magnitude = distance || 1;
+        const vx = dx / magnitude;
+        const vy = dy / magnitude;
+
+        // Previous direction
+        const px = lastMouseDelta.current.x;
+        const py = lastMouseDelta.current.y;
+
+        // Dot product → directional agreement
+        const dot = vx * px + vy * py;
+        const normalizedAgreement = (dot + 1) / 2;
+
+        // If the direction has changed too much, reset lock-in delay
+        const angleThreshold = 0.8;
+        if (dot < angleThreshold) {
+          lastChangeTimestamp.current = Date.now();
+        }
+
+        // Ease based on delay + directional consistency
+        const timeSinceStable = Date.now() - lastChangeTimestamp.current;
+        const lockInDelay = 600;
+
+        const maxEase = 0.01;
+        const minEase = 0.002;
+
+        const adjustedAgreement =
+          timeSinceStable >= lockInDelay ? normalizedAgreement : 0;
+
+        const ease = minEase + (maxEase - minEase) * adjustedAgreement;
+
+        lastMouseDelta.current = { x: vx, y: vy };
+
+        // Move runner
+        runnerPos.current.x += dx * ease;
+        runnerPos.current.y += dy * ease;
+
+        // Movement detection
+        const idleRadius = 80;
+        isMoving.current = distance > idleRadius;
+
+
+        // Update direction for flipping
         if (dx !== 0) {
           lastDirection.current = dx > 0 ? 1 : -1;
         }
 
+        // Update animation frame
         if (timestamp - lastFrameTime > frameDuration) {
           if (isMoving.current) {
             currentRunningFrameIndex =
               (currentRunningFrameIndex + 1) % runningFrameIndices.length;
             frame.current = runningFrameIndices[currentRunningFrameIndex];
           } else {
-            frame.current = 0; // idle frame
+            frame.current = 0; // idle
           }
           lastFrameTime = timestamp;
         }
@@ -67,6 +114,7 @@ export default function TrackCanvas() {
         const drawWidth = frameWidth * scale;
         const drawHeight = frameHeight * scale;
 
+        // Clear and draw
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#d23f3f';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -79,8 +127,8 @@ export default function TrackCanvas() {
             sprite.current,
             sx, sy,
             frameWidth, frameHeight,
-            -mousePos.current.x - drawWidth / 2,
-            mousePos.current.y - drawHeight / 2,
+            -runnerPos.current.x - drawWidth / 2,
+            runnerPos.current.y - drawHeight / 2,
             drawWidth, drawHeight
           );
         } else {
@@ -88,14 +136,13 @@ export default function TrackCanvas() {
             sprite.current,
             sx, sy,
             frameWidth, frameHeight,
-            mousePos.current.x - drawWidth / 2,
-            mousePos.current.y - drawHeight / 2,
+            runnerPos.current.x - drawWidth / 2,
+            runnerPos.current.y - drawHeight / 2,
             drawWidth, drawHeight
           );
         }
 
         ctx.restore();
-
         requestAnimationFrame(draw);
       };
 
