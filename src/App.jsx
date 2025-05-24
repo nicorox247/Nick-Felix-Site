@@ -1,19 +1,24 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Routes, Route } from 'react-router-dom';
 import './App.css'
 import NavBar from './components/Navbar'
-import ProjectCard from './components/ProjectCard'
-import heroImg from './assets/hero.jpg'           // add any image you like
-import TrackCanvas from './components/TrackCanvas'
+// import ProjectCard from './components/ProjectCard'
+// import TrackCanvas from './components/TrackCanvas'
+
+import Homepage from './pages/Homepage';
+import TrackPage from './pages/TrackPage';
 
 function App() {
   return (
     <>
       <NavBar />
 
-      <TrackCanvas />
-      {/* Add overlay UI like nav bar, name, links, etc. */}
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/track" element={<TrackPage />} />
+        </Routes>
+
+
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 text-sm text-center py-6">
