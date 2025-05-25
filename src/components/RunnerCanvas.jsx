@@ -4,6 +4,7 @@ export default function RunnerCanvas({
   spriteImage,
   backgroundImage,
   idleRadius = 80,
+  rotateDeg = 90,
   scale = 1.5,
   runningFrames = [1, 2, 3, 4],
   gridCols = 2,
@@ -115,20 +116,31 @@ export default function RunnerCanvas({
         const drawWidth = frameWidth * scale;
         const drawHeight = frameHeight * scale;
 
-        for (let x = 0; x < canvas.width; x += scaledWidth) {
+        const angle = (rotateDeg * Math.PI) / 180;
+
+        const drawRotatedBackground = (x = 0, y = 0) => {
           ctx.save();
-          ctx.translate(x, 0);
-          ctx.rotate(Math.PI / 2);
+
+          const originX = x + (background.width * bgScale) / 2;
+          const originY = y + (background.height * bgScale) / 2;
+          ctx.translate(originX, originY);
+          ctx.rotate(angle);
           ctx.drawImage(
             background,
             0, 0,
             background.width, background.height,
-            0, -scaledHeight,
+            - (background.width * bgScale) / 2,
+            - (background.height * bgScale) / 2,
             background.width * bgScale,
             background.height * bgScale
           );
+
           ctx.restore();
-        }
+        };
+
+        const centerX = (canvas.width - background.width * bgScale) / 2;
+        const centerY = (canvas.height - background.height * bgScale) / 2;
+        drawRotatedBackground(centerX, centerY);
 
         ctx.save();
         if (lastDirection.current === -1) {
@@ -160,7 +172,20 @@ export default function RunnerCanvas({
     return () => {
       window.removeEventListener('mousemove', updateMouse);
     };
-  }, [spriteImage, backgroundImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay]);
+  }, [spriteImage, backgroundImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay, rotateDeg]);
 
-  return <canvas ref={canvasRef} style={{ display: 'block', ...canvasStyle }} />;
+  return (
+    <canvas 
+      ref={canvasRef} 
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: -1, // behind everything
+          width: '100vw',
+          height: '100vh',
+          ...canvasStyle,
+        }} 
+    />
+   );
 }
