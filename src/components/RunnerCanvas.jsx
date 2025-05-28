@@ -181,7 +181,7 @@ export default function RunnerCanvas({
           position: 'fixed',
           top: 0,
           left: 0,
-          zIndex: -1, // behind everything
+          zIndex: 0, // behind everything
           width: '100vw',
           height: '100vh',
           ...canvasStyle,

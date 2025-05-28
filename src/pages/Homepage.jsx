@@ -16,7 +16,7 @@ export default function Homepage() {
           left: 0,
           // width: '100%',
           // height: '100%',
-          zIndex: -1, // make sure it's behind everything
+          zIndex: 0, // make sure it's behind everything
         }}
         
       />
