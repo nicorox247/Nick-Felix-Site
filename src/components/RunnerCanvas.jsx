@@ -36,6 +36,8 @@ export default function RunnerCanvas({
     };
     window.addEventListener('mousemove', updateMouse);
 
+    
+
     sprite.current.onload = () => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
@@ -109,8 +111,11 @@ export default function RunnerCanvas({
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        const scaleX = canvas.width / background.width;
+        const scaleY = canvas.height / background.height;
+
         const scaledHeight = canvas.height;
-        const bgScale = scaledHeight / background.width;
+        const bgScale = Math.min(scaleX, scaleY);
         const scaledWidth = background.height * bgScale;
 
         const drawWidth = frameWidth * scale;
@@ -178,12 +183,12 @@ export default function RunnerCanvas({
     <canvas 
       ref={canvasRef} 
         style={{ 
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           zIndex: 0, // behind everything
-          width: '100vw',
-          height: '100vh',
+          width: '100%',
+          height: '100%',
           ...canvasStyle,
         }} 
     />

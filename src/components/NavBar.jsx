@@ -4,8 +4,9 @@ export default function NavBar() {
         <nav className="max-w-6xl mx-auto flex items-center justify-between p-4">
           <h1 className="text-xl font-bold tracking-wide">Nick&nbsp;Felix</h1>
           <ul className="hidden md:flex gap-6 text-sm uppercase tracking-wider">
-            <li className="hover:text-blue-400 transition">About</li>
             <li className="hover:text-blue-400 transition">Projects</li>
+            <li className="hover:text-blue-400 transition">Research</li>
+            <li className="hover:text-blue-400 transition">About</li>
             <li className="hover:text-blue-400 transition">Contact</li>
           </ul>
           {/* Mobile hamburger (optional) */}

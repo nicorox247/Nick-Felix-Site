@@ -15,6 +15,10 @@ function App() {
       <main className="flex-1 relative overflow-hidden">
         <Routes>
           <Route path="/" element={<Homepage />} />
+          {/* <Route path="/projects" element={<Projects />}/> */}
+          {/* <Route path="/research" element={<Research />}/> */}
+          {/* <Route path="/about" element={<About />}/> */}
+          {/* <Route path="/contact" element={<Contact />}/> */}
           <Route path="/track" element={<TrackPage />} />
         </Routes>
       </main>
