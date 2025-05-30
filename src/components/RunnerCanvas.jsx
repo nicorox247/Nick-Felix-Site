@@ -5,7 +5,7 @@ export default function RunnerCanvas({
   backgroundImage,
   idleRadius = 80,
   rotateDeg = 90,
-  scale = 1.5,
+  scale = 1.7,
   runningFrames = [1, 2, 3, 4],
   gridCols = 2,
   maxEase = 0.01,
@@ -111,8 +111,8 @@ export default function RunnerCanvas({
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const scaleX = canvas.width / background.width;
-        const scaleY = canvas.height / background.height;
+        const scaleX = canvas.width/ background.width;
+        const scaleY = canvas.height / background.height ;
 
         const scaledHeight = canvas.height;
         const bgScale = Math.min(scaleX, scaleY);
@@ -184,8 +184,9 @@ export default function RunnerCanvas({
       ref={canvasRef} 
         style={{ 
           position: 'absolute',
-          top: 0,
-          left: 0,
+          top: '0',
+          left: '0',
+          // transform: 'scale(0.9)',
           zIndex: 0, // behind everything
           width: '100%',
           height: '100%',
