@@ -24,6 +24,24 @@ export default function RunnerCanvas({
   const lastMouseDelta = useRef({ x: 0, y: 0 });
   const lastChangeTimestamp = useRef(Date.now());
 
+
+  // // Interactive Zones, add more if needed
+  // const zones = [
+  //   {
+  //     x: 400,
+  //     y: 200,
+  //     width: 100,
+  //     height: 100,
+  //     title: "Research Booth",
+  //     preview: "Explore current projects",
+  //     route: "/research",
+  //   },
+  //   // Add more zones...
+  // ];
+
+  // // Variable that holds
+  // const activeZone = useInteractiveZones(player.x, player.y, zones);
+
   useEffect(() => {
     sprite.current.src = spriteImage;
 
