@@ -1,21 +1,22 @@
-import { useState, useEffect } from 'react';
+// /hooks/useInteractiveZones.js
+import { useMemo } from 'react';
 
-export default function useInteractiveZones(baseZones, canvasSize) {
-  const [zones, setZones] = useState([]);
+export default function useInteractiveZones(playerPos, canvasSize, baseZones) {
+  return useMemo(() => {
+    if (!canvasSize.width || !canvasSize.height || !playerPos) return null;
 
-  useEffect(() => {
-    if (!canvasSize.width || !canvasSize.height) return;
+    for (const zone of baseZones) {
+      const zoneX = zone.relativeX * canvasSize.width;
+      const zoneY = zone.relativeY * canvasSize.height;
+      const radius = zone.relativeRadius * Math.min(canvasSize.width, canvasSize.height);
 
-    // Assume base zones are defined in relative terms (e.g., 0.1 to 1.0)
-    const scaledZones = baseZones.map(zone => ({
-      ...zone,
-      x: zone.relativeX * canvasSize.width,
-      y: zone.relativeY * canvasSize.height,
-      radius: zone.relativeRadius * Math.min(canvasSize.width, canvasSize.height),
-    }));
+      const dx = playerPos.x - zoneX;
+      const dy = playerPos.y - zoneY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
 
-    setZones(scaledZones);
-  }, [baseZones, canvasSize]);
+      if (dist < radius) return zone;
+    }
 
-  return zones;
+    return null;
+  }, [playerPos, canvasSize, baseZones]);
 }
