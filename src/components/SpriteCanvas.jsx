@@ -2,9 +2,8 @@ import { useRef, useEffect } from 'react';
 
 export default function SpriteCanvas({
   spriteImage,
-  idleRadius = 35,
+  idleRadius = 80,
   scale = 1.7,
-  rotateDeg = 0,
   runningFrames = [1, 2, 3, 4],
   gridCols = 2,
   maxEase = 0.0002,
@@ -33,23 +32,22 @@ export default function SpriteCanvas({
         y: e.clientY - rect.top,
       };
     };
-
     window.addEventListener('mousemove', updateMouse);
 
     let animationId = null;
-    let lastFrameTime = Date.now();
+    let lastFrameTime = 0;               // match old init
     const fps = 8;
     const frameDuration = 1000 / fps;
     let currentRunningFrameIndex = 0;
 
-    const draw = () => {
+    const draw = (timestamp) => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
-      const now = Date.now();
 
+      // Movement & easing (uses Date.now for lastChange)
       const dx = mousePos.current.x - runnerPos.current.x;
       const dy = mousePos.current.y - runnerPos.current.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distance = Math.hypot(dx, dy);
       const magnitude = distance || 1;
       const vx = dx / magnitude;
       const vy = dy / magnitude;
@@ -59,10 +57,12 @@ export default function SpriteCanvas({
       const dot = vx * px + vy * py;
       const normalizedAgreement = (dot + 1) / 2;
 
-      if (dot < 0.8) lastChangeTimestamp.current = now;
-
-      const timeSinceStable = now - lastChangeTimestamp.current;
-      const adjustedAgreement = timeSinceStable >= lockInDelay ? normalizedAgreement : 0;
+      if (dot < 0.8) {
+        lastChangeTimestamp.current = Date.now();
+      }
+      const timeSinceStable = Date.now() - lastChangeTimestamp.current;
+      const adjustedAgreement =
+        timeSinceStable >= lockInDelay ? normalizedAgreement : 0;
 
       const ease = minEase + (maxEase - minEase) * adjustedAgreement;
       lastMouseDelta.current = { x: vx, y: vy };
@@ -71,22 +71,26 @@ export default function SpriteCanvas({
       runnerPos.current.y += dy * ease;
 
       isMoving.current = distance > idleRadius;
-
       if (dx !== 0) lastDirection.current = dx > 0 ? 1 : -1;
 
-      if (isMoving.current && now - lastFrameTime > frameDuration) {
-        currentRunningFrameIndex =
-          (currentRunningFrameIndex + 1) % runningFrames.length;
-        frame.current = runningFrames[currentRunningFrameIndex];
-        lastFrameTime = now;
-      } else if (!isMoving.current) {
-        frame.current = 0;
+      // Frame cycling exactly as old
+      if (timestamp - lastFrameTime > frameDuration) {
+        if (isMoving.current) {
+          currentRunningFrameIndex =
+            (currentRunningFrameIndex + 1) % runningFrames.length;
+          frame.current = runningFrames[currentRunningFrameIndex];
+        } else {
+          frame.current = 0;
+        }
+        lastFrameTime = timestamp;
       }
 
       if (onPlayerMove) {
         onPlayerMove({ x: runnerPos.current.x, y: runnerPos.current.y });
       }
 
+
+      // Draw sprite frame
       const frameWidth = sprite.current.width / gridCols;
       const frameHeight = sprite.current.height / 3;
       const drawWidth = frameWidth * scale;
@@ -108,26 +112,20 @@ export default function SpriteCanvas({
         ctx.scale(-1, 1);
         ctx.drawImage(
           sprite.current,
-          sx,
-          sy,
-          frameWidth,
-          frameHeight,
+          sx, sy,
+          frameWidth, frameHeight,
           -runnerPos.current.x - drawWidth / 2,
           runnerPos.current.y - drawHeight / 2,
-          drawWidth,
-          drawHeight
+          drawWidth, drawHeight
         );
       } else {
         ctx.drawImage(
           sprite.current,
-          sx,
-          sy,
-          frameWidth,
-          frameHeight,
+          sx, sy,
+          frameWidth, frameHeight,
           runnerPos.current.x - drawWidth / 2,
           runnerPos.current.y - drawHeight / 2,
-          drawWidth,
-          drawHeight
+          drawWidth, drawHeight
         );
       }
       ctx.restore();
@@ -137,19 +135,15 @@ export default function SpriteCanvas({
 
     const startIfReady = () => {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = canvas.offsetWidth * dpr;
-      canvas.height = canvas.offsetHeight * dpr;
-      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any previous transform
-      ctx.scale(dpr, dpr);
+      // match old sizing
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
 
       if (sprite.current.complete) {
-        animationId = requestAnimationFrame(draw);
+        requestAnimationFrame(draw);
       } else {
         sprite.current.onload = () => {
-          animationId = requestAnimationFrame(draw);
+          requestAnimationFrame(draw);
         };
       }
     };
@@ -177,12 +171,11 @@ export default function SpriteCanvas({
       ref={canvasRef}
       style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
+        top: 0, left: 0,
         zIndex: 10,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none', // ensures mouse events pass through
+        pointerEvents: 'none',
       }}
     />
   );

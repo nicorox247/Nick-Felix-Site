@@ -8,7 +8,7 @@ export default function ZoneObject({ zone, isActive, onClick }) {
         top: zone.y,
         left: zone.x,
         transform: 'translate(-50%, -50%)',
-        cursor: isActive ? 'pointer' : 'default',
+        cursor: 'pointer',
         opacity: isActive ? 1 : 0.7,
         scale: isActive ? '1.15' : '1',
       }}

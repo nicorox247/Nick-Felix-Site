@@ -1,9 +1,10 @@
 import { useRef, useEffect } from 'react';
 
 export default function RunnerCanvas({
+  canvasRef,
   spriteImage,
   backgroundImage,
-  idleRadius = 80,
+  idleRadius = 90,
   rotateDeg = 90,
   scale = 1.7,
   runningFrames = [1, 2, 3, 4],
@@ -13,7 +14,7 @@ export default function RunnerCanvas({
   lockInDelay = 600,
   canvasStyle = {},
 }) {
-  const canvasRef = useRef(null);
+
   const sprite = useRef(new Image());
   const frame = useRef(1);
 
@@ -54,7 +55,20 @@ export default function RunnerCanvas({
     };
     window.addEventListener('mousemove', updateMouse);
 
-    
+    let drawRef = null; // persist draw function across scopes
+
+    const resizeCanvas = () => {
+      const canvas = canvasRef.current;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // force one frame render immediately (before next RAF)
+      if (drawRef) {
+        drawRef(performance.now());
+      }
+    };
+    window.addEventListener('resize', resizeCanvas);
+
 
     sprite.current.onload = () => {
       const canvas = canvasRef.current;
@@ -74,6 +88,7 @@ export default function RunnerCanvas({
       background.src = backgroundImage;
 
       background.onload = () => {
+        drawRef = draw
         requestAnimationFrame(draw);
       };
 
@@ -194,6 +209,7 @@ export default function RunnerCanvas({
 
     return () => {
       window.removeEventListener('mousemove', updateMouse);
+      window.removeEventListener('resize', resizeCanvas);
     };
   }, [spriteImage, backgroundImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay, rotateDeg]);
 

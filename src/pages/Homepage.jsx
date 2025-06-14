@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import mouseOverlay from '../hooks/mouseOverlay';
-import RunnerCanvas from '../components/RunnerCanvas';
+import RunnerCanvas from '../components/RunnerCanvasOld';
 import athleteSprite from '../assets/athlete-sprite.png';
 import courtyardTile from '../assets/courtyard-tile.png';
 import useInteractiveZones from '../hooks/useInteractiveZone';
+import ZoneObject from '../components/ZoneObject';
+import DevZoneHelpers from '../components/DevZoneHelpers';
 
 
 const baseZones = [
@@ -23,8 +25,11 @@ const baseZones = [
   },
 ];
 
+
 export default function Homepage() {
   const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+
   const showOverlay = mouseOverlay(containerRef, 1500); // <- hook with all the logic
 
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
@@ -32,11 +37,56 @@ export default function Homepage() {
 
   const activeZone = useInteractiveZones(playerPos, canvasSize, baseZones);
 
+  // THIS IS THE HELPER LOGIC DELETE WHEN DONE!!!
+  const [showZoneHelpers, setShowZoneHelpers] = useState(false);
+
+
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      if (canvasRef.current) {
+        setCanvasSize({
+          width: canvasRef.current.offsetWidth,
+          height: canvasRef.current.offsetHeight,
+        });
+      }
+    };
+  
+    updateCanvasSize(); // call once initially
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, []);
+
+  const absoluteZones = baseZones.map((zone) => ({
+    ...zone,
+    x: zone.relativeX * canvasSize.width,
+    y: zone.relativeY * canvasSize.height,
+    radius: zone.relativeRadius * Math.min(canvasSize.width, canvasSize.height),
+    title: zone.label,
+    preview: `View my ${zone.id}`, // optional
+  }));
+
+
+  // THIS IS THE DEV HELPER PLEASE DELETE WHEN DONE!!
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === 'h') {
+        setShowZoneHelpers((prev) => !prev);
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  
+  
+  
+
   return (
     <div ref={containerRef} className="relative w-full min-h-screen">
 
       {/* Canvas */}
       <RunnerCanvas
+        canvasRef={canvasRef}
         spriteImage={athleteSprite}
         backgroundImage={courtyardTile}
         idleRadius={15}
@@ -52,6 +102,16 @@ export default function Homepage() {
         onPlayerMove={setPlayerPos}
         onCanvasResize={setCanvasSize}
       />
+
+      {absoluteZones.map((zone) => (
+        <ZoneObject
+          key={zone.id}
+          zone={zone}
+          isActive={activeZone?.id === zone.id}
+          onClick={() => window.location.href = `/${zone.id}`} // or use Next.js router
+        />
+      ))}
+
       
 
       {/* Overlay */}
@@ -70,6 +130,13 @@ export default function Homepage() {
           <p className="text-sm text-gray-600">Click to view {activeZone.id}</p>
         </div>
       )}
+
+      {/* THIS IS THE HELPER DELETE WHEN DONE */}
+
+      {showZoneHelpers && (
+        <DevZoneHelpers zones={baseZones} canvasSize={canvasSize} />
+      )}
+
 
 
     </div>
