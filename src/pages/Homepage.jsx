@@ -5,25 +5,49 @@ import athleteSprite from '../assets/athlete-sprite.png';
 import courtyardTile from '../assets/courtyard-tile.png';
 import useInteractiveZones from '../hooks/useInteractiveZone';
 import ZoneObject from '../components/ZoneObject';
-import DevZoneHelpers from '../components/DevZoneHelpers';
+import DevZoneEditor from '../components/DevZoneEditor';
+
+
 
 
 const baseZones = [
   {
-    id: 'research',
-    label: 'Research Booth',
-    relativeX: 0.25,
-    relativeY: 0.5,
-    relativeRadius: 0.05,
+    "id": "research",
+    "label": "Research Booth",
+    "relativeX": 0.3483636363636364,
+    "relativeY": 0.4297669876453488,
+    "relativeRadius": 0.05
   },
   {
-    id: 'resume',
-    label: 'Resume Scroll',
-    relativeX: 0.75,
-    relativeY: 0.5,
-    relativeRadius: 0.05,
+    "id": "resume",
+    "label": "Resume Scroll",
+    "relativeX": 0.43927272727272726,
+    "relativeY": 0.10999954578488372,
+    "relativeRadius": 0.05
   },
+  {
+    "id": "project_1",
+    "label": "Featured Poject 1",
+    "relativeX": 0.6545454545454545,
+    "relativeY": 0.1841274527616279,
+    "relativeRadius": 0.05
+  },
+  {
+    "id": "project_2",
+    "label": "Featured Project 2",
+    "relativeX": 0.6645833333333333,
+    "relativeY": 0.8495551215277778,
+    "relativeRadius": 0.05
+  },
+  {
+    "id": "other",
+    "label": "All Projects",
+    "relativeX": 0.6945454545454546,
+    "relativeY": 0.43267396438953487,
+    "relativeRadius": 0.05
+  }
 ];
+
 
 
 export default function Homepage() {
@@ -38,6 +62,7 @@ export default function Homepage() {
   const activeZone = useInteractiveZones(playerPos, canvasSize, baseZones);
 
   // THIS IS THE HELPER LOGIC DELETE WHEN DONE!!!
+  const [editableZones, setEditableZones] = useState(baseZones);
   const [showZoneHelpers, setShowZoneHelpers] = useState(false);
 
 
@@ -77,6 +102,16 @@ export default function Homepage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // THIS IS THE DEV HELPER PLEASE DELETE WHEN DONE!!
+  const updateZonePosition = (id, newRelCoords) => {
+    setEditableZones((prev) =>
+      prev.map((zone) =>
+        zone.id === id ? { ...zone, ...newRelCoords } : zone
+      )
+    );
+    console.log(`Updated ${id}:`, newRelCoords);
+  };
   
   
   
@@ -134,8 +169,15 @@ export default function Homepage() {
       {/* THIS IS THE HELPER DELETE WHEN DONE */}
 
       {showZoneHelpers && (
-        <DevZoneHelpers zones={baseZones} canvasSize={canvasSize} />
+        <DevZoneEditor
+          zones={editableZones}
+          canvasSize={canvasSize}
+          onZoneUpdate={updateZonePosition}
+        />
       )}
+
+
+      
 
 
 
