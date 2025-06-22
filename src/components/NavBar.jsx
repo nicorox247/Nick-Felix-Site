@@ -1,14 +1,32 @@
+import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+
+
 export default function NavBar() {
     return (
       <header className="bg-gray-900 text-white">
         <nav className="max-w-6xl mx-auto flex items-center justify-between p-4">
-          <h1 className="text-xl font-bold tracking-wide">Nick&nbsp;Felix</h1>
+        <Link to="/" className="text-2xl md:text-3xl font-extrabold tracking-wide">
+          Nick&nbsp;Felix
+        </Link>
+
+
           <ul className="hidden md:flex gap-6 text-sm uppercase tracking-wider">
-            <li className="hover:text-blue-400 transition">Projects</li>
-            <li className="hover:text-blue-400 transition">Research</li>
-            <li className="hover:text-blue-400 transition">About</li>
-            <li className="hover:text-blue-400 transition">Contact</li>
+            <li>
+              <Link to="/projects">Projects</Link>
+            </li>
+            <li>
+              <Link to="/research">Research</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+            <li>
+              <Link to="/contact">Contact</Link>
+            </li>
           </ul>
+
+
           {/* Mobile hamburger (optional) */}
           <button className="md:hidden p-2 hover:bg-gray-800 rounded">
             <span className="sr-only">Open menu</span>
