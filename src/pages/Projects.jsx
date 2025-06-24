@@ -5,11 +5,15 @@ const projects = [
     title: 'Personal Portfolio',
     description: 'A dynamic homepage featuring animated interaction zones.',
     video: '/videos/portfolio-demo.mov', // or .webm
+    github: 'https://github.com/nicorox247/Nick-Felix-Site',
+    live: 'https://nickfelix.dev',
   },
   {
     title: 'Crypto Dashboard',
     description: 'Real-time price tracking and wallet insights.',
     image: '/images/crypto.png',
+    
+    live: 'https://nickfelix.dev'
   },
   {
     title: 'Poopy peepee',
