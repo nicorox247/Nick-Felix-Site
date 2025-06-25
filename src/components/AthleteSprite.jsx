@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import athleteSprite from '../assets/athlete-sprite.png';
 
-export default function AthleteSprite({ activeIndex, isRunning, direction }) {
+export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
   const spriteRef = useRef(null);
   const [frame, setFrame] = useState(0);
   const [frameWidth, setFrameWidth] = useState(0);
@@ -24,7 +24,7 @@ export default function AthleteSprite({ activeIndex, isRunning, direction }) {
     if (isRunning) {
       interval = setInterval(() => {
         setFrame((prev) => ((prev - 1 + 1) % 4) + 1); // cycle frames 1-4 only
-      }, 100); // 10 FPS
+      }, 80); // 8 FPS
     } else {
       setFrame(0); // idle frame
     }
@@ -63,7 +63,8 @@ export default function AthleteSprite({ activeIndex, isRunning, direction }) {
             backgroundRepeat: 'no-repeat',
             width: `${frameWidth * cols}px`,
             height: `${frameHeight * rows}px`,
-            transform: direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
+            transform: facingLeft ? 'scaleX(-1)' : 'scaleX(1)',
+
           }}
         />
       </div>

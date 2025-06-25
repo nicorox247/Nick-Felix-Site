@@ -1,27 +1,36 @@
 // src/components/TimelineNode.jsx
-export default function TimelineNode({ year, text, isLeft, isActive, index }) {
-    const offsetX = isLeft ? '-translate-x-40' : 'translate-x-40';
-    const offsetY = index * 200; // vertical spacing per node
-    const lineRotation = isLeft ? 'rotate-45' : '-rotate-45';
-  
+export default function TimelineNode({ timelineData, activeIndex }) {
     return (
-      <div
-        className={`absolute left-1/2 transform ${offsetX} translate-y-[${offsetY}px] flex flex-col items-center`}
-      >
-        {/* Diagonal connector line */}
-        {index > 0 && (
-          <div
-            className={`w-32 h-1 bg-white transform origin-top ${lineRotation} mb-4`}
-          ></div>
-        )}
+      <div className="absolute left-1/2 top-0 transform -translate-x-1/2">
+        {timelineData.map((item, index) => {
+          const isLeft = index % 2 === 0;
+          const yOffset = index * 200;
+          const xOffset = isLeft ? '-translate-x-[250px]' : 'translate-x-[50px]';
+          const isActive = index === activeIndex;
   
-        {/* Node bubble */}
-        <div
-          className={`p-4 rounded-lg shadow-lg w-48 text-center ${isActive ? 'bg-blue-500' : 'bg-gray-700'}`}
-        >
-          <h3 className="text-xl font-bold">{year}</h3>
-          <p className="text-sm mt-2">{text}</p>
-        </div>
+          const lineStyle = {
+            position: 'absolute',
+            top: `${yOffset + 60}px`,
+            left: isLeft ? 'calc(50% - 120px)' : 'calc(50% + 120px)',
+            width: '2px',
+            height: '140px',
+            transform: isLeft ? 'rotate(45deg)' : 'rotate(-45deg)',
+            transformOrigin: 'top center',
+            backgroundColor: 'white',
+          };
+  
+          return (
+            <div key={index}>
+              <div
+                className={`absolute top-[${yOffset}px] ${xOffset} w-64 p-4 rounded-lg bg-white shadow-md transition-all duration-700 ${isActive ? 'ring-4 ring-blue-400' : ''}`}
+              >
+                <h3 className="font-bold text-lg text-black">{item.title || item.year}</h3>
+                <p className="text-sm text-gray-600">{item.description}</p>
+              </div>
+              {index < timelineData.length - 1 && <div style={lineStyle}></div>}
+            </div>
+          );
+        })}
       </div>
     );
   }
