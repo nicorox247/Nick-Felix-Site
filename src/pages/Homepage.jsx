@@ -158,13 +158,14 @@ export default function Homepage() {
         </div>
       )}
 
-      {/* Optional: UI preview when athlete enters a zone */}
+       {/* Optional: UI preview when athlete enters a zone */}
+       {/* 
       {activeZone && (
         <div className="absolute z-40 left-1/2 bottom-10 transform -translate-x-1/2 bg-white text-black px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
           <h3 className="font-bold">{activeZone.label}</h3>
           <p className="text-sm text-gray-600">Click to view {activeZone.id}</p>
         </div>
-      )}
+      )} */}
 
       {/* THIS IS THE HELPER DELETE WHEN DONE */}
 
