@@ -1,9 +1,8 @@
-// src/components/AthleteSprite.jsx
 import { useEffect, useRef, useState } from 'react';
 import athleteSprite from '../assets/athlete-sprite.png';
 
 export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
-  const spriteRef = useRef(null);
+  const translateRef = useRef(null);
   const [frame, setFrame] = useState(0);
   const [frameWidth, setFrameWidth] = useState(0);
   const [frameHeight, setFrameHeight] = useState(0);
@@ -23,8 +22,8 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
     let interval;
     if (isRunning) {
       interval = setInterval(() => {
-        setFrame((prev) => ((prev - 1 + 1) % 4) + 1); // cycle frames 1-4 only
-      }, 80); // 8 FPS
+        setFrame((prev) => ((prev - 1 + 1) % 4) + 1); // cycle frames 1-4
+      }, 100); // 10 FPS
     } else {
       setFrame(0); // idle frame
     }
@@ -32,12 +31,12 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
   }, [isRunning]);
 
   useEffect(() => {
-    const nodeSpacingY = 200; // vertical distance per node
+    const nodeSpacingY = 200;
     const offsetY = activeIndex * nodeSpacingY;
-    const offsetX = activeIndex % 2 === 0 ? -80 : 80; // alternate left/right
+    const offsetX = activeIndex % 2 === 0 ? -80 : 80;
 
-    if (spriteRef.current) {
-      spriteRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    if (translateRef.current) {
+      translateRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     }
   }, [activeIndex]);
 
@@ -46,27 +45,31 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
 
   return (
     <div
-      ref={spriteRef}
+      ref={translateRef}
       className="absolute top-0 left-1/2 transition-transform duration-700 ease-in-out"
     >
       <div
-        className="overflow-hidden"
         style={{
-          width: `${frameWidth}px`,
-          height: `${frameHeight}px`,
+          transform: facingLeft ? 'scaleX(-1)' : 'scaleX(1)',
         }}
       >
         <div
+          className="overflow-hidden"
           style={{
-            backgroundImage: `url(${athleteSprite})`,
-            backgroundPosition: `-${col * frameWidth}px -${row * frameHeight}px`,
-            backgroundRepeat: 'no-repeat',
-            width: `${frameWidth * cols}px`,
-            height: `${frameHeight * rows}px`,
-            transform: facingLeft ? 'scaleX(-1)' : 'scaleX(1)',
-
+            width: `${frameWidth}px`,
+            height: `${frameHeight}px`,
           }}
-        />
+        >
+          <div
+            style={{
+              backgroundImage: `url(${athleteSprite})`,
+              backgroundPosition: `-${col * frameWidth}px -${row * frameHeight}px`,
+              backgroundRepeat: 'no-repeat',
+              width: `${frameWidth * cols}px`,
+              height: `${frameHeight * rows}px`,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
