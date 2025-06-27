@@ -46,7 +46,7 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
   return (
     <div
       ref={translateRef}
-      className="absolute top-0 left-1/2 transition-transform duration-700 ease-in-out"
+      className="absolute z-20 left-1/2 top-0 transition-transform duration-700 ease-in-out"
     >
       <div
         style={{
