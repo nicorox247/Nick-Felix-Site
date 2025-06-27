@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import athleteSprite from '../assets/athlete-sprite.png';
 
-export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
+export default function AthleteSprite({ activeIndex, isRunning, facingLeft, nodeRefs }) {
   const translateRef = useRef(null);
   const [frame, setFrame] = useState(0);
   const [frameWidth, setFrameWidth] = useState(0);
@@ -31,14 +31,18 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft }) {
   }, [isRunning]);
 
   useEffect(() => {
-    const nodeSpacingY = 200;
-    const offsetY = activeIndex * nodeSpacingY;
-    const offsetX = activeIndex % 2 === 0 ? -80 : 80;
+    const node = nodeRefs.current[activeIndex];
+    if (node && translateRef.current) {
+      const rect = node.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const scrollX = window.scrollX;
 
-    if (translateRef.current) {
-      translateRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      const spriteX = rect.right + scrollX - frameWidth / 2; // right edge of node
+      const spriteY = rect.top + scrollY - frameHeight / 2; // top edge of node
+
+      translateRef.current.style.transform = `translate(${spriteX}px, ${spriteY}px)`;
     }
-  }, [activeIndex]);
+  }, [activeIndex, frameWidth, frameHeight]);
 
   const col = frame % cols;
   const row = Math.floor(frame / cols);

@@ -1,5 +1,5 @@
 // src/pages/About.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
 
@@ -30,6 +30,7 @@ export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [facingLeft, setFacingLeft] = useState(false); // false = right
+  const nodeRefs = useRef([]);
 
   const handleArrowClick = (direction) => {
     const newIndex = activeIndex + direction;
@@ -93,12 +94,13 @@ export default function About() {
 
             {/* Wrapper to push entire timeline content down */}
             <div className="relative felx flex-col ">
-                <TimelineNode timelineData={timelineData} activeIndex={activeIndex} />
+                <TimelineNode timelineData={timelineData} activeIndex={activeIndex} nodeRefs={nodeRefs}/>
 
                 <AthleteSprite
                 activeIndex={activeIndex}
                 isRunning={isRunning}
                 facingLeft={facingLeft}
+                nodeRefs={nodeRefs}
                 />
 
                 <div className="relative flex gap-4 justify-center">
