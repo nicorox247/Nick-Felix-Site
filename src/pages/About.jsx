@@ -92,7 +92,7 @@ export default function About() {
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
-            <div className="relative flex-col ">
+            <div className="relative felx flex-col ">
                 <TimelineNode timelineData={timelineData} activeIndex={activeIndex} />
 
                 <AthleteSprite
