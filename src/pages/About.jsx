@@ -32,6 +32,7 @@ export default function About() {
   const [facingLeft, setFacingLeft] = useState(false); // false = right
   const nodeRefs = useRef([]);
 
+  const [hasMoved, setHasMoved] = useState(false); // ← new flag
   const handleArrowClick = (direction) => {
     const newIndex = activeIndex + direction;
   
@@ -40,8 +41,13 @@ export default function About() {
       setActiveIndex(newIndex);
       
       // Toggle direction every time we move (except on initial render)
-      if (activeIndex !== 0) {
+      if (hasMoved) {
         setFacingLeft((prev) => !prev);
+      }
+
+      // Set the movement flag once we leave the first node
+      if (!hasMoved && newIndex !== 0) {
+        setHasMoved(true);
       }
   
       setTimeout(() => {
@@ -93,13 +99,17 @@ export default function About() {
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
-            <div className="relative felx flex-col ">
-                <TimelineNode timelineData={timelineData} activeIndex={activeIndex} nodeRefs={nodeRefs}/>
-
+            <div className="relative flex flex-col" id="timeline-container">
                 <AthleteSprite
                 activeIndex={activeIndex}
                 isRunning={isRunning}
                 facingLeft={facingLeft}
+                nodeRefs={nodeRefs}
+                />
+
+                <TimelineNode 
+                timelineData={timelineData} 
+                activeIndex={activeIndex} 
                 nodeRefs={nodeRefs}
                 />
 

@@ -23,7 +23,7 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft, node
     if (isRunning) {
       interval = setInterval(() => {
         setFrame((prev) => ((prev - 1 + 1) % 4) + 1); // cycle frames 1-4
-      }, 100); // 10 FPS
+      }, 80); // 8 FPS
     } else {
       setFrame(0); // idle frame
     }
@@ -33,16 +33,25 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft, node
   useEffect(() => {
     const node = nodeRefs.current[activeIndex];
     if (node && translateRef.current) {
-      const rect = node.getBoundingClientRect();
-      const scrollY = window.scrollY;
-      const scrollX = window.scrollX;
-
-      const spriteX = rect.right + scrollX - frameWidth / 2; // right edge of node
-      const spriteY = rect.top + scrollY - frameHeight / 2; // top edge of node
-
-      translateRef.current.style.transform = `translate(${spriteX}px, ${spriteY}px)`;
+      const containerRect = document.getElementById('timeline-container').getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      
+      const localX = nodeRect.right - containerRect.left - frameWidth / 2;
+      const localY = nodeRect.top - containerRect.top - frameHeight / 2;
+      
+      translateRef.current.style.transform = `translate(${localX}px, ${localY}px)`;
+      
     }
   }, [activeIndex, frameWidth, frameHeight]);
+
+  console.log({
+    // rect: node.getBoundingClientRect(),
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+    frameWidth,
+    frameHeight,
+  });
+  
 
   const col = frame % cols;
   const row = Math.floor(frame / cols);
@@ -50,7 +59,7 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft, node
   return (
     <div
       ref={translateRef}
-      className="absolute z-20 left-1/2 top-0 transition-transform duration-700 ease-in-out"
+      className="absolute z-2 top-0 transition-transform duration-700 ease-in-out"
     >
       <div
         style={{
