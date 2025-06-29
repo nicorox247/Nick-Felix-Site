@@ -109,7 +109,7 @@ export default function About() {
         </div>
 
         {/* Timeline section */}
-        <div className="relative bg-[#0f172a] text-white overflow-hidden pb-12">
+        <div className="relative bg-[#0f172a] text-white overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
