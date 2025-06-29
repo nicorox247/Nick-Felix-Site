@@ -1,5 +1,5 @@
 // src/pages/About.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
 
@@ -55,6 +55,20 @@ export default function About() {
       }, 700);
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handleArrowClick(-1); // Left = Previous
+      } else if (e.key === 'ArrowRight') {
+        handleArrowClick(1); // Right = Next
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeIndex, isRunning, hasMoved]); // dependencies that affect movement
+  
 
   return (
     <div>
