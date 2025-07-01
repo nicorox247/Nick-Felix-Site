@@ -6,13 +6,13 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
       <div className="relative flex flex-col pb-10 items-center">
         {timelineData.map((item, index) => {
           const isLeft = index % 2 === 0;
-          const yOffset = index * 200;
+          const yOffset = index * 240;
           const xOffset = isLeft ? '-translate-x-[170px]' : 'translate-x-[170px]';
           const isActive = index === activeIndex;
 
           const containerMid = window.innerWidth / 2;
-            const nodeOffset = 170;
-            const leftOffset = isLeft ? containerMid - nodeOffset : containerMid + nodeOffset;
+            const nodeOffset = 220;
+            const leftOffset = isLeft ? `-translate-x-[${nodeOffset}px]` : `translate-x-[${nodeOffset}px]`;
 
 
           const lineStyle = {
@@ -32,10 +32,10 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
             <div key={index}>
                 <div
                     ref={(el) => (nodeRefs.current[index] = el)} // ← Save ref
-                    className={`relative ${xOffset} w-64 p-4 rounded-lg bg-white shadow-md transition-all duration-700 ${isActive ? 'ring-4 ring-blue-400' : ''}`}
+                    className={`relative ${xOffset} w-150 p-20 rounded-lg bg-white shadow-md transition-all duration-700 ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
                     >
-                    <h3 className="font-bold text-lg text-black">{item.title || item.year}</h3>
-                    <p className="text-sm text-gray-600">{item.description}</p>
+                    <h3 className="font-bold text-xl text-black">{item.title || item.year}</h3>
+                    <p className="text-lg text-gray-600">{item.description}</p>
                 </div>
               {index < timelineData.length - 1 && (
                   <div className="h-20 flex justify-center items-center">

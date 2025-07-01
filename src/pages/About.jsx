@@ -109,7 +109,7 @@ export default function About() {
         </div>
 
         {/* Timeline section */}
-        <div className="relative bg-[#0f172a] text-white overflow-hidden pb-12 ">
+        <div className="relative bg-sky-pastel text-white overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
@@ -127,7 +127,7 @@ export default function About() {
                 nodeRefs={nodeRefs}
                 />
 
-                <div className="relative flex gap-4 justify-center">
+                <div className="relative flex gap-4 justify-center ">
                     <button
                         className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-500"
                         onClick={() => handleArrowClick(-1)}

@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-mario-red: #e63946;
+  --color-coin-yellow: #f1fa3c;
+  --color-sky-pastel: #a8dadc;
+  --color-mario-green: #2a9d8f;
+  --color-brick-brown: #6d4c41;
+}
+
 #root {
   /* max-width: 1280px; */
   /* max-width: none; */
