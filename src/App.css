@@ -2,10 +2,11 @@
 
 @theme {
 
-    --color-background: #EBE9E9; 
+  --color-background: #EBE9E9; 
   --color-primary: #0A369D;
   --color-accent: #7D4F50;
   --color-highlight: #009EFF;
+  --color-warning: #FF7D00;
   --color-error: #DB162F;
   --color-muted: #6E6362;
   --color-dark: #000000;
@@ -80,4 +81,9 @@
 
 .read-the-docs {
   color: #888;
+}
+
+body{
+  color: var(--color-dark);
+  background-color: var(--color-background);
 }
