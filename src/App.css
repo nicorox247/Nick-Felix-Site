@@ -5,7 +5,8 @@
   --color-background: #EBE9E9; 
   --color-primary: #0A369D;
   --color-accent: #7D4F50;
-  --color-highlight: #009EFF;
+  /* --color-highlight: #009EFF; */
+  --color-highlight: var(--color-green-400);
   --color-warning: #FF7D00;
   --color-error: #DB162F;
   --color-muted: #6E6362;
@@ -86,4 +87,12 @@
 body{
   color: var(--color-dark);
   background-color: var(--color-background);
+}
+
+a{
+  color: var(--color-light);
+}
+
+a:hover{
+  color: var(--color-highlight);
 }

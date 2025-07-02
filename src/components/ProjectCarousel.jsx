@@ -34,14 +34,14 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-gray-800 rounded-lg shadow p-6 max-w-md mx-auto">
+            <div className="bg-primary text-light rounded-lg shadow p-6 max-w-md mx-auto">
               {project.video ? (
                 <video src={project.video} autoPlay loop muted className="w-full rounded mb-4" />
               ) : (
                 <img src={project.image} alt={project.title} className="w-full rounded mb-4" />
               )}
-              <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-              <p className="text-sm text-gray-300">{project.description}</p>
+              <h3 className="text-xl font-bold mb-2 text-light">{project.title}</h3>
+              <p className="text-sm text-light">{project.description}</p>
                 <div className="relative mt-8 gap-4 pb-10">
                     {project.github && (
                         <a
@@ -50,7 +50,7 @@ export default function ProjectCarousel({ projects }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="GitHub Repository"
-                            className="absolute left-1/4"
+                            className="absolute left-1/4 "
                         >
                                         <svg
                                         className="size-10 fill-current"
