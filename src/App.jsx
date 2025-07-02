@@ -11,6 +11,8 @@ import Research from './pages/Research';
 import Resume from './pages/Resume';
 import TrackPage from './pages/TrackPage';
 
+import Color from './pages/ColorPage';
+
 function App() {
   return (
     <>
@@ -26,6 +28,9 @@ function App() {
           <Route path="/research" element={<Research />}/>
           <Route path="/resume" element={<Resume />}/>
           <Route path="/track" element={<TrackPage />} />
+
+          {/* Color testing */}
+          <Route path="/colors" element={<Color />} />
         </Routes>
       </main>
 

@@ -73,9 +73,9 @@ export default function About() {
   return (
     <div>
         {/* Hero section */}
-        <div className="text-center py-16">
-            <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
-            <p className="text-gray-300 text-lg max-w-xl mx-auto">
+        <div className="bg-background text-center py-16">
+            <h1 className="text-dark text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
+            <p className="text-muted text-lg max-w-xl mx-auto">
                 I'm a developer, athlete, and builder of interactive digital experiences.
             </p>
         </div>
@@ -109,7 +109,7 @@ export default function About() {
         </div>
 
         {/* Timeline section */}
-        <div className="relative bg-sky-pastel text-white overflow-hidden pb-12 ">
+        <div className="relative bg-brick-brown text-white overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
