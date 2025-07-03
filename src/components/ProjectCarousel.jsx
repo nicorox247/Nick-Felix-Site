@@ -49,14 +49,14 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-primary text-light rounded-4xl sm:pb-5 lg:pb-10 h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-5xl shadow mx-auto">
+            <div className="bg-primary text-light rounded-4xl sm:pb-5 lg:pb-10 h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-5xl shadow mx-auto min-h-[400px] sm:min-h-[500px] lg:min-h-[520px]">
               {project.video ? (
                 <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
               ) : (
-                <img src={project.image} alt={project.title} className="rounded-t-4xl aspect-video mb-4 object-cover" />
+                <img src={project.image} alt={project.title} loading="lazy" className="rounded-t-4xl aspect-video mb-4 object-cover" />
               )}
               <h3 className="lg:text-3xl sm:text-xl font-bold mb-2 text-light">{project.title}</h3>
-              <p className="lg:text-lg sm:text-sm text-light">{project.description}</p>
+              <p className="lg:text-lg sm:text-sm text-light line-clamp-2">{project.description}</p>
                 <div className="relative mt-8 gap-4 pb-10">
                     {project.github && (
                         <a
@@ -116,10 +116,10 @@ export default function ProjectCarousel({ projects }) {
         </div>
       </Swiper>
 
-      <div className="relative mt-80 sm:mt-64 lg:mt-32 xl:mt-12 z-10">
+      <div className="relative mt-80 sm:mt-64 lg:mt-32 xl:mt-4 z-10">
         {/* Top fade overlay */}
         <div
-          className="absolute -top-12 left-0 right-0 h-80 sm:h-64 lg:h-64 xl:h-50 pointer-events-none z-20 bg-gradient-to-t from-transparent to-background transition-opacity duration-200"
+          className="absolute xl:-top-4 -top-12 left-0 right-0 h-80 sm:h-64 lg:h-64 xl:h-50 pointer-events-none z-20 bg-gradient-to-t from-transparent to-background transition-opacity duration-200"
           style={{ opacity: fogOpacity }}
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
@@ -137,6 +137,7 @@ export default function ProjectCarousel({ projects }) {
                     src={project.image}
                     alt={project.title}
                     className="w-full h-48 object-cover"
+                    loading="lazy"
                   />
                 )}
                 <div className="p-4">

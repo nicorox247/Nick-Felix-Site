@@ -6,7 +6,7 @@ const projects = [
     title: 'Personal Portfolio',
     description: 'A dynamic homepage featuring animated interaction zones.',
     video: '/videos/portfolio-demo.mov',
-    thumbnail: '', // optional fallback or thumbnail image
+    image: '/images/crypto.png', // optional fallback or thumbnail image
     github: 'https://github.com/nicorox247/Nick-Felix-Site',
     live: 'https://nickfelix.dev',
     tags: ['React', 'Tailwind', 'Canvas', 'Vite'],

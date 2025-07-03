@@ -46,4 +46,11 @@
     stroke-dasharray: 125.6;
     transform: rotate(-90deg);
   }
+
+  .swiper-pagination {
+    margin-top: 1rem; /* or more if needed */
+    position: relative;
+    z-index: 30;
+  }
+  
   
