@@ -23,6 +23,7 @@ export default function ProjectCarousel({ projects }) {
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
+        speed={1200}
         autoplay={{
           delay: 5000, // <-- In milliseconds
           disableOnInteraction: true,
@@ -34,14 +35,14 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-primary text-light rounded-4xl pb-10 sm:max-w-l md:max-w-2xl lg:max-w-5xl shadow mx-auto">
+            <div className="bg-primary text-light rounded-4xl sm:pb-5 lg:pb-10 sm:max-w-l md:max-w-2xl lg:max-w-5xl shadow mx-auto">
               {project.video ? (
                 <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
               ) : (
                 <img src={project.image} alt={project.title} className="rounded-t-4xl aspect-video mb-4 object-cover" />
               )}
-              <h3 className="text-xl font-bold mb-2 text-light">{project.title}</h3>
-              <p className="text-sm text-light">{project.description}</p>
+              <h3 className="lg:text-3xl sm:text-xl font-bold mb-2 text-light">{project.title}</h3>
+              <p className="lg:text-lg sm:text-sm text-light">{project.description}</p>
                 <div className="relative mt-8 gap-4 pb-10">
                     {project.github && (
                         <a

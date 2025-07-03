@@ -25,7 +25,7 @@ const projects = [
 
 export default function Projects() {
   return (
-    <div className="min-h-screen px-4 py-10">
+    <div className="min-h-screen py-5">
       <h1 className="text-4xl font-bold mb-8 text-center">Projects</h1>
       <ProjectCarousel projects={projects} />
     </div>
