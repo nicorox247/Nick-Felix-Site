@@ -34,11 +34,11 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-primary text-light rounded-lg shadow p-6 max-w-md mx-auto">
+            <div className="bg-primary text-light rounded-4xl pb-10 sm:max-w-l md:max-w-2xl lg:max-w-5xl shadow mx-auto">
               {project.video ? (
-                <video src={project.video} autoPlay loop muted className="w-full rounded mb-4" />
+                <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
               ) : (
-                <img src={project.image} alt={project.title} className="w-full rounded mb-4" />
+                <img src={project.image} alt={project.title} className="rounded-t-4xl aspect-video mb-4 object-cover" />
               )}
               <h3 className="text-xl font-bold mb-2 text-light">{project.title}</h3>
               <p className="text-sm text-light">{project.description}</p>
