@@ -3,7 +3,7 @@ import './ProjectDetail.css';
 
 export default function ProjectTagTicker({ tags = [] }) {
     // Repeat tags for smooth infinite scroll
-    const repeatedTags = [...tags, ...tags, ...tags];
+    const repeatedTags = [...tags, ...tags, ...tags, ...tags];
     const getColor = (tag) => {
       if (tag.toLowerCase().includes('react')) return 'text-blue-400';
       if (tag.toLowerCase().includes('python')) return 'text-yellow-300';
@@ -15,7 +15,7 @@ export default function ProjectTagTicker({ tags = [] }) {
     
   
     return (
-      <div className="relative overflow-hidden bg-dark border-t border-b border-gray-700 h-12">
+      <div className="relative overflow-hidden bg-dark border-t border-b border-gray-700 h-12 max-w-lg lg:max-w-xl xl:max-w-4xl mx-auto">
         <div className="absolute whitespace-nowrap animate-ticker flex items-center gap-8 px-4">
           {repeatedTags.map((tag, index) => (
             <div
@@ -27,7 +27,7 @@ export default function ProjectTagTicker({ tags = [] }) {
             </div>
           ))}
         </div>
-        {/* Optional glow overlay on edges */}
+        {/* glow overlay on edges */}
         <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-dark to-transparent z-10" />
         <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-dark to-transparent z-10" />
       </div>
