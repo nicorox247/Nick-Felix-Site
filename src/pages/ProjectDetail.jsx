@@ -1,5 +1,6 @@
 // pages/ProjectDetail.jsx
 import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import projectData from '../data/projects'; // adjust path to your data file
 import ProjectTagTicker from '../components/ProjectTagTicker';
@@ -7,6 +8,10 @@ import ProjectTagTicker from '../components/ProjectTagTicker';
 export default function ProjectDetail() {
   const { id } = useParams();
   const project = projectData.find(p => p.id === id);
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);  
 
   if (!project) {
     return <div className="text-center py-20 text-error">Project not found.</div>;
