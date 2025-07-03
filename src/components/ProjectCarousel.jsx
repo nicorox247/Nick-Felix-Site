@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect} from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
+import { Link } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './ProjectCarousel.css'; // We'll add progress bar CSS here
@@ -8,6 +9,7 @@ import './ProjectCarousel.css'; // We'll add progress bar CSS here
 export default function ProjectCarousel({ projects }) {
   const progressCircle = useRef(null);
   const progressContent = useRef(null);
+  const [fogOpacity, setFogOpacity] = useState(1);
 
   const onAutoplayTimeLeft = (swiper, time, progress) => {
     if (progressCircle.current) {
@@ -17,6 +19,18 @@ export default function ProjectCarousel({ projects }) {
       progressContent.current.textContent = `${Math.ceil(time / 1000)}s`;
     }
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // 0 → 100px scroll = opacity 1 → 0
+      const newOpacity = Math.max(0, 1 - scrollY / 200);
+      setFogOpacity(newOpacity);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="relative">
@@ -35,7 +49,7 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-primary text-light rounded-4xl sm:pb-5 lg:pb-10 sm:max-w-l md:max-w-2xl lg:max-w-5xl shadow mx-auto">
+            <div className="bg-primary text-light rounded-4xl sm:pb-5 lg:pb-10 h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-5xl shadow mx-auto">
               {project.video ? (
                 <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
               ) : (
@@ -101,6 +115,42 @@ export default function ProjectCarousel({ projects }) {
           <span ref={progressContent}></span>
         </div>
       </Swiper>
+
+      <div className="relative mt-80 sm:mt-64 lg:mt-32 xl:mt-12 z-10">
+        {/* Top fade overlay */}
+        <div
+          className="absolute -top-12 left-0 right-0 h-80 sm:h-64 lg:h-64 xl:h-50 pointer-events-none z-20 bg-gradient-to-t from-transparent to-background transition-opacity duration-200"
+          style={{ opacity: fogOpacity }}
+        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {projects.map((project, i) => (
+              <Link
+              to={`/projects/${project.id}`}
+              key={i}
+              className="transform hover:-translate-y-2 hover:-translate-x-2 transition-transform duration-300"
+            >
+              <div className="bg-primary hover:shadow-muted hover:text-highlight rounded-xl shadow-md overflow-hidden w-full h-full">
+                {project.image && (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold">{project.title}</h3>
+                  <p className="text-sm text-light mt-2 line-clamp-3">{project.description}</p>
+                </div>
+              </div>
+            </Link>
+            
+            ))}
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
