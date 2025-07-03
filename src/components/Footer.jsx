@@ -1,3 +1,4 @@
+// import LinkedinIcon from "../assets/linkedin"
 export default function Footer(){
 
     return(
