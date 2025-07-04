@@ -52,5 +52,27 @@
     position: relative;
     z-index: 30;
   }
+  /* Position and style Swiper's built-in nav buttons */
+  .swiper-button-next,
+  .swiper-button-prev {
+    position: absolute;
+    color: var(--color-dark); /* or your preferred color */
+    /* background: var(--color-accent); */
+    border-radius: 9999px;
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+  }
+
+  .swiper-button-next {
+    right: 10px;
+  }
+
+  .swiper-button-prev {
+    left: 10px;
+  }
+  
   
   

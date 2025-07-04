@@ -11,7 +11,7 @@ export default function Projects() {
   
   return (
     <div className="min-h-screen py-5">
-      <h1 className="text-4xl font-bold mb-8 text-center">Projects</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Featured Projects</h1>
       <ProjectCarousel projects={projectData} />
     </div>
   );
