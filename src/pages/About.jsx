@@ -68,6 +68,23 @@ export default function About() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeIndex, isRunning, hasMoved]); // dependencies that affect movement
+
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+
+  useEffect(() => {
+    const node = nodeRefs.current[activeIndex];
+    if (node && !isFirstRender) {
+      node.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    } else if (isFirstRender) {
+      setIsFirstRender(false); // allow future scrolls
+    }
+  }, [activeIndex]);
+  
+  
   
 
   return (

@@ -17,23 +17,27 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
           <div key={index} className="relative flex flex-col items-center">
             {/* Timeline Node */}
             <motion.div
-              ref={(el) => (nodeRefs.current[index] = el)}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
+            
+            >
+
+            <div
+              ref={(el) => (nodeRefs.current[index] = el)}
               className={`transition-all duration-700 rounded-lg bg-gradient-to-bl from-primary to-red-700 shadow-md px-6 py-4
                 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 
                 w-full ${xOffset} 
                 ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
-            >
+                >
               <h3 className="font-bold text-xl text-light">
                 {item.title || item.year}
               </h3>
               <p className="text-light text-base sm:text-lg">
                 {item.description}
               </p>
-            </motion.div>
+            </div>
 
             {/* Connector Line */}
             {index < timelineData.length - 1 && (
@@ -44,10 +48,10 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
                     transform: isLeft ? 'rotate(-45deg)' : 'rotate(45deg)',
                     transformOrigin: 'top center',
                   }}
-                />
+                  />
               </div>
             )}
-            
+            </motion.div>
           </div>
         );
       })}
