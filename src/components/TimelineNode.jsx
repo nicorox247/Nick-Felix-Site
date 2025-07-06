@@ -17,8 +17,8 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
           <div key={index} className="relative flex flex-col items-center">
             {/* Timeline Node */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={index < 2 ? false : { opacity: 0, y: 50 }}
+              whileInView={index === 0 ? {} : { opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             
