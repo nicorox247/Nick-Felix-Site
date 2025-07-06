@@ -17,7 +17,7 @@ export default function NavBar() {
 
         {/* Desktop Links */}
         <ul className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-wider">
-          {['projects', 'research', 'about', 'contact'].map((page) => (
+          {['projects', 'research', 'about', 'resume', 'contact'].map((page) => (
             <li key={page}>
               <NavLink
                 to={`/${page}`}
@@ -58,7 +58,7 @@ export default function NavBar() {
       {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-primary px-6 pb-4 space-y-2 text-sm font-medium">
-          {['projects', 'research', 'about', 'contact'].map((page) => (
+          {['projects', 'research', 'about', 'resume', 'contact'].map((page) => (
             <Link
               key={page}
               to={`/${page}`}

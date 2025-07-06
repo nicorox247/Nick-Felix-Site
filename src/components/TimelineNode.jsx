@@ -1,59 +1,56 @@
 // src/components/TimelineNode.jsx
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
-    return (
-      <div className="relative flex flex-col pb-10 items-center">
-        {timelineData.map((item, index) => {
-          const isLeft = index % 2 === 0;
-          const yOffset = index * 240;
-          const xOffset = isLeft ? '-translate-x-[170px]' : 'translate-x-[170px]';
-          const isActive = index === activeIndex;
+  return (
+    <div className="relative flex flex-col pb-10 items-center">
+      {timelineData.map((item, index) => {
+        const isLeft = index % 2 === 0;
+        const isActive = index === activeIndex;
 
-          const containerMid = window.innerWidth / 2;
-            const nodeOffset = 220;
-            const leftOffset = isLeft ? `-translate-x-[${nodeOffset}px]` : `translate-x-[${nodeOffset}px]`;
+        // Tailwind responsive translation for node positioning
+        const xOffset = isLeft
+          ? '-translate-x-1/4 md:-translate-x-1/3 lg:-translate-x-1/2 xl:-translate-x-[75%]'
+          : 'translate-x-1/4 md:translate-x-1/3 lg:translate-x-1/2 xl:translate-x-[75%]';
 
+        return (
+          <div key={index} className="relative flex flex-col items-center">
+            {/* Timeline Node */}
+            <motion.div
+              ref={(el) => (nodeRefs.current[index] = el)}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className={`transition-all duration-700 rounded-lg bg-gradient-to-bl from-primary to-red-700 shadow-md px-6 py-4
+                max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 
+                w-full ${xOffset} 
+                ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
+            >
+              <h3 className="font-bold text-xl text-light">
+                {item.title || item.year}
+              </h3>
+              <p className="text-light text-base sm:text-lg">
+                {item.description}
+              </p>
+            </motion.div>
 
-          const lineStyle = {
-            width: '2px',
-            height: '100px',
-            backgroundColor: 'white',
-            transform: isLeft ? 'rotate(-45deg)' : 'rotate(45deg)',
-            transformOrigin: 'top center',
-            marginTop: '1.5rem',
-            marginBottom: '1.5rem',
-            position: 'relative',
-            top: `${yOffset + 60}px`,
-          };
-          
-
-          return (
-            <div key={index}>
+            {/* Connector Line */}
+            {index < timelineData.length - 1 && (
+              <div className="h-30 flex justify-center items-center">
                 <div
-                    ref={(el) => (nodeRefs.current[index] = el)} // ← Save ref
-                    className={`relative ${xOffset} w-150 p-20 rounded-lg bg-gradient-to-bl from-primary to-red-700 shadow-md transition-all duration-700 ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
-                    >
-                    <h3 className="font-bold text-xl text-light">{item.title || item.year}</h3>
-                    <p className="text-lg text-light">{item.description}</p>
-                </div>
-              {index < timelineData.length - 1 && (
-                  <div className="h-20 flex justify-center items-center">
-                  <div
-                    style={{
-                      width: '2px',
-                      height: '100%',
-                      backgroundColor: 'white',
-                      transform: isLeft ? 'rotate(-45deg)' : 'rotate(45deg)',
-                      transformOrigin: 'top center',
-                    }}
-                  />
-                </div>
-              )}
-
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+                  className="w-1 h-full bg-dark"
+                  style={{
+                    transform: isLeft ? 'rotate(-45deg)' : 'rotate(45deg)',
+                    transformOrigin: 'top center',
+                  }}
+                />
+              </div>
+            )}
+            
+          </div>
+        );
+      })}
+    </div>
+  );
+}

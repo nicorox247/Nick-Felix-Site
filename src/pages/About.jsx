@@ -14,7 +14,7 @@ const timelineData = [
   },
   {
     year: '2022',
-    description: 'Expanded into blockchain and fintech projects.',
+    description: 'Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.',
   },
   {
     year: '2023',
@@ -95,18 +95,6 @@ export default function About() {
             </div>
         </div>
 
-        {/* Highlight section */}
-        <div className="flex flex-wrap justify-center gap-4 px-6 py-8">
-            <div className="bg-gray-800 px-6 py-4 rounded-lg shadow text-white font-medium">
-                💻 Loves building interfaces
-            </div>
-            <div className="bg-gray-800 px-6 py-4 rounded-lg shadow text-white font-medium">
-                🏃 Ran 47.00 in the 400m
-            </div>
-            <div className="bg-gray-800 px-6 py-4 rounded-lg shadow text-white font-medium">
-                🧠 Fascinated by AI & markets
-            </div>
-        </div>
 
         {/* Timeline section */}
         <div className="relative bg-brick-brow overflow-hidden pb-12 ">
