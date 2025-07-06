@@ -32,10 +32,10 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
             <div key={index}>
                 <div
                     ref={(el) => (nodeRefs.current[index] = el)} // ← Save ref
-                    className={`relative ${xOffset} w-150 p-20 rounded-lg bg-white shadow-md transition-all duration-700 ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
+                    className={`relative ${xOffset} w-150 p-20 rounded-lg bg-gradient-to-bl from-primary to-red-700 shadow-md transition-all duration-700 ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
                     >
-                    <h3 className="font-bold text-xl text-black">{item.title || item.year}</h3>
-                    <p className="text-lg text-gray-600">{item.description}</p>
+                    <h3 className="font-bold text-xl text-light">{item.title || item.year}</h3>
+                    <p className="text-lg text-light">{item.description}</p>
                 </div>
               {index < timelineData.length - 1 && (
                   <div className="h-20 flex justify-center items-center">

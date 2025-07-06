@@ -1,8 +1,10 @@
 @import "tailwindcss";
+@tailwind utilities;
 
 @theme {
 
-  --color-background: #EBE9E9; 
+  --color-background: var(--color-slate-200); 
+  /* #EBE9E9 */
   --color-primary: #0A369D;
   --color-accent: #7D4F50;
   /* --color-highlight: #009EFF; */
@@ -36,6 +38,12 @@
   --color-sky-pastel: #a8dadc;
   --color-mario-green: #2a9d8f;
   --color-brick-brown: #6d4c41; */
+}
+
+
+
+@utility bg-gradient-primary {
+  @apply bg-gradient-to-r from-primary to-primary via-dark;
 }
 
 #root {

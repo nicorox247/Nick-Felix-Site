@@ -2,7 +2,7 @@
 export default function Footer(){
 
     return(
-        <footer className="w-full bg-primary text-light text-sm text-center py-8 px-4">
+        <footer className="w-full bg-gradient-primary text-light text-sm text-center py-8 px-4">
             <div className="flex justify-center items-center space-x-6 mb-2">
             {/* LinkedIn */}
             <a

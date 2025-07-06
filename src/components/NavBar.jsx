@@ -5,7 +5,7 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-primary to-primary via-dark text-light shadow-md backdrop-blur bg-opacity-90">
+    <header className="sticky top-0 z-50 bg-gradient-primary text-light shadow-md backdrop-blur bg-opacity-90">
       <nav className="max-w-7xl mx-auto flex items-center justify-between p-4 px-6 md:px-8">
         {/* Logo / Name */}
         <Link

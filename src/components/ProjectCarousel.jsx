@@ -51,7 +51,7 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className=" bg-gradient-to-r from-primary to-primary via-dark text-light hover:border-highlight hover:border-2 rounded-4xl shadow-dark h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-4xl shadow mx-auto min-h-[400px] sm:min-h-[500px] lg:min-h-[520px]">
+            <div className=" bg-gradient-primary text-light hover:border-highlight hover:border-2 rounded-4xl shadow-dark h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-4xl shadow mx-auto min-h-[400px] sm:min-h-[500px] lg:min-h-[520px]">
               <Link to={`/projects/${project.id}`} className="block h-full hover:text-highlight">
                 {project.video ? (
                   <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
@@ -153,7 +153,7 @@ export default function ProjectCarousel({ projects }) {
               key={i}
               className="transform hover:-translate-y-2 hover:-translate-x-2 transition-transform duration-300"
             >
-              <div className="bg-primary hover:shadow-muted hover:text-highlight rounded-xl shadow-md overflow-hidden w-full h-full">
+              <div className="bg-gradient-primary hover:shadow-muted hover:text-highlight rounded-xl shadow-md overflow-hidden w-full h-full">
                 {project.image && (
                   <img
                     src={project.image}
