@@ -57,7 +57,7 @@ export default function NavBar() {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-primary px-6 pb-4 space-y-2 text-sm font-medium">
+        <div className="md:hidden bg-gradient-primary px-6 pb-4 space-y-2 text-sm font-medium">
           {['projects', 'research', 'about', 'resume', 'contact'].map((page) => (
             <Link
               key={page}

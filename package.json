@@ -15,8 +15,10 @@
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-pdf": "^10.0.1",
     "react-router-dom": "^7.6.0",
     "swiper": "^11.2.8",
+    "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
