@@ -13,6 +13,8 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
           ? '-translate-x-1/4 md:-translate-x-1/3 lg:-translate-x-1/2 xl:-translate-x-[75%]'
           : 'translate-x-1/4 md:translate-x-1/3 lg:translate-x-1/2 xl:translate-x-[75%]';
 
+        const activeStyle = isLeft ? 'node-left' : 'node-right';
+
         return (
           <div key={index} className="relative flex flex-col items-center">
             {/* Timeline Node */}
@@ -26,15 +28,15 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
 
             <div
               ref={(el) => (nodeRefs.current[index] = el)}
-              className={`transition-all duration-700 rounded-lg bg-gradient-to-bl from-primary to-red-700 shadow-md px-6 py-4
+              className={`transition-all duration-700 rounded-lg bg-gradient-primary shadow-md px-6 py-4
                 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 
                 w-full ${xOffset} 
-                ${isActive ? 'bg-blue-200 ring-4 ring-blue-400' : ''}`}
+                ${isActive ? `ring-4 ring-light shadow-dark ${activeStyle}` : ''}`}
                 >
-              <h3 className="font-bold text-xl text-light">
-                {item.title || item.year}
-              </h3>
-              <p className="text-light text-base sm:text-lg">
+              <h1 className="font-bold text-3xl text-light pb-2">
+                {item.title || item.description}
+              </h1>
+              <p className="text-light text-xl! sm:text-lg">
                 {item.description}
               </p>
             </div>

@@ -42,7 +42,6 @@
 }
 
 @utility bg-gradient-highlight{
-  
   @apply bg-gradient-to-r from-sky-500 to-sky-500 via-dark;
 }
 
@@ -71,6 +70,14 @@
 @utility media-source{
   @apply w-full mx-auto rounded-4xl mb-4
   max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-5xl border border-dark shadow-muted;
+}
+
+@utility node-left{
+  @apply bg-gradient-to-r from-primary to-sky-500 via-dark;
+}
+
+@utility node-right{
+  @apply bg-gradient-to-l from-primary to-sky-500 via-dark;
 }
 
 #root {

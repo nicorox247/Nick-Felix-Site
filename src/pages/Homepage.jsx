@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import mouseOverlay from '../hooks/mouseOverlay';
 import RunnerCanvas from '../components/RunnerCanvasOld';
 import athleteSprite from '../assets/athlete-sprite.png';
@@ -60,6 +61,8 @@ export default function Homepage() {
   const [playerPos, setPlayerPos] = useState(null);
 
   const activeZone = useInteractiveZones(playerPos, canvasSize, baseZones);
+
+  const navigate = useNavigate();
 
   // THIS IS THE HELPER LOGIC DELETE WHEN DONE!!!
   const [editableZones, setEditableZones] = useState(baseZones);
@@ -143,7 +146,7 @@ export default function Homepage() {
           key={zone.id}
           zone={zone}
           isActive={activeZone?.id === zone.id}
-          onClick={() => window.location.href = `/${zone.id}`} // or use Next.js router
+          onClick={() => navigate(`/${zone.id}`)}
         />
       ))}
 

@@ -5,26 +5,43 @@ import TimelineNode from '../components/TimelineNode';
 
 const timelineData = [
   {
-    year: '2020',
-    description: 'Started college and began exploring software development.',
+    title: 'The Builder',
+    description:
+      'I love making things — apps, systems, or strategies. Whether it’s a digital product or a financial model, I thrive when I’m solving problems with elegant, efficient solutions.',
+    keywords: ['engineering', 'problem-solving', 'systems', 'full-stack', 'strategy'],
   },
   {
-    year: '2021',
-    description: 'Built my first full-stack application and interned at ClaimTek.',
+    title: 'The Competitor',
+    description:
+      'I’m a 400m sprinter. The discipline, grit, and structure of elite athletics shape how I approach everything — from code to business. I’m calm under pressure and always training for the next level.',
+    keywords: ['athlete', 'track', 'grit', 'discipline', 'performance'],
   },
   {
-    year: '2022',
-    description: 'Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.Expanded into blockchain and fintech projects.',
+    title: 'The Analyst',
+    description:
+      'With a background in computer science and statistics, I’m constantly looking for patterns — in data, in people, in markets. I love turning noise into insight.',
+    keywords: ['data', 'statistics', 'finance', 'algorithms', 'quant'],
   },
   {
-    year: '2023',
-    description: 'Created educational tools and focused on UI/UX design.',
+    title: 'The Designer',
+    description:
+      'I care about how things feel. I build interfaces that are intuitive and beautiful, and I believe function and aesthetics should always reinforce each other.',
+    keywords: ['UI/UX', 'design', 'aesthetics', 'accessibility', 'frontend'],
   },
   {
-    year: '2024',
-    description: 'Led development of interactive websites and financial strategies.',
+    title: 'The Curious Mind',
+    description:
+      'I read philosophy, study psychology, explore the edges of AI, and experiment with sound. I believe that curiosity is the fuel for original thinking.',
+    keywords: ['AI', 'philosophy', 'psychology', 'music', 'curiosity'],
+  },
+  {
+    title: 'The Vision',
+    description:
+      'I want to build systems that matter — tools that empower people, businesses that make sense, and experiences that leave a mark. I’m just getting started.',
+    keywords: ['vision', 'impact', 'entrepreneurship', 'product', 'future'],
   },
 ];
+
 
 export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -88,7 +105,7 @@ export default function About() {
   
 
   return (
-    <div className="bg-gradient-to-r from-background to-red-200 via-sky-100 ">
+    <div className="bg-background ">
         {/* Hero section */}
         <div className="text-center py-16">
             <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
@@ -114,7 +131,7 @@ export default function About() {
 
 
         {/* Timeline section */}
-        <div className="relative bg-brick-brow overflow-hidden pb-12 ">
+        <div className="relative overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
 
             {/* Wrapper to push entire timeline content down */}
