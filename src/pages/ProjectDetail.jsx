@@ -14,7 +14,7 @@ export default function ProjectDetail() {
   }, []);  
 
   if (!project) {
-    return <div className="text-center py-20 text-error">Project not found.</div>;
+    return <div className="text-center py-20 text-xl text-error">Project not found.</div>;
   }
 
   return (
@@ -29,11 +29,9 @@ export default function ProjectDetail() {
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">{project.title}</h1>
             <p className="text-lg max-w-2xl mx-auto text-muted/80">{project.description}</p>
             {project.video ? (
-                <video src={project.video} controls className="w-full mx-auto rounded-4xl mb-4
-                max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-5xl" />
+                <video src={project.video} controls className="media-source" />
             ) : (
-                <img src={project.image} alt={project.title} className="w-full mx-auto rounded-4xl mb-4
-                max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-5xl" />
+                <img src={project.image} alt={project.title} className="media-source" />
             )}
             {/* Add more project fields here if needed */}
             <div className="flex flex-wrap justify-center gap-6 py-8">

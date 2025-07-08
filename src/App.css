@@ -68,6 +68,11 @@
   @apply scrollbar scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-200;
 }
 
+@utility media-source{
+  @apply w-full mx-auto rounded-4xl mb-4
+  max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-5xl border border-dark shadow-muted;
+}
+
 #root {
   /* max-width: 1280px; */
   /* max-width: none; */
