@@ -29,10 +29,10 @@ const projects = [
       title: 'AxisMED',
       description: 'Website for a student-led medical innovation platform bridging medicine, engineering, and entrepreneurship.',
       image: '/images/axis-med/axis-med-hp.png', // Update with actual screenshot path
-      video: '/videos/axis-med-demo.mov', // Optional
+      video: '/videos/axis-med/axis-med-demo.mov', // Optional
       live: 'https://axis-med.vercel.app/',
       github: '', // Leave blank or update if public
-      tags: ['React', 'Tailwind CSS', 'Vite', 'Healthcare', 'Design'],
+      tags: ['React', 'Tailwind CSS', 'Vite', 'Java Script', 'Healthcare', 'Design'],
       date: '2025-07-01',
       featured: true,
       content: `AxisMED is a website built for a pre-incubator program based at the world’s first engineering-based medical school. The platform brings together clinical insight, engineering precision, and translational ambition to empower medical trainees in solving real-world healthcare problems.
