@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -10,8 +10,30 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 export default function Resume() {
   const [numPages, setNumPages] = useState(null);
-  const [scale, setScale] = useState(2); // default zoom level
+  const [scale, setScale] = useState(null); // default zoom level
+  const [startScale, setStartScale] = useState(null); // default zoom level
   const [showZoomIndicator, setShowZoomIndicator] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const previewRef = useRef(null);
+
+
+  useEffect(() => {
+    const width = window.innerWidth;
+    let initialScale;
+  
+    if (width >= 1280) {
+      initialScale = 2;
+    } else if (width >= 1024) {
+      initialScale = 1.6;
+    } else if (width >= 768) {
+      initialScale = 1.2;
+    } else {
+      initialScale = 0.8;
+    }
+  
+    setScale(initialScale);
+    setStartScale(initialScale);
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -25,7 +47,7 @@ export default function Resume() {
 
   const zoomIn = () => {
     setScale(prev => {
-      const newScale = Math.min(prev + 0.2, 3);
+      const newScale = Math.min(prev + 0.2, (startScale*2));
       triggerZoomIndicator();
       return newScale;
     });
@@ -33,13 +55,25 @@ export default function Resume() {
 
   const zoomOut = () => {
     setScale(prev => {
-      const newScale = Math.max(prev - 0.2, 0.5);
+      const newScale = Math.max(prev - 0.2, (startScale/2));
       triggerZoomIndicator();
       return newScale;
     });
   };
 
-  const zoomPercent = Math.round((scale / 2) * 100);
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      previewRef.current?.requestFullscreen?.().then(() => {
+        setIsFullscreen(true);
+      }).catch(err => console.error("Fullscreen error:", err));
+    } else {
+      document.exitFullscreen?.().then(() => {
+        setIsFullscreen(false);
+      });
+    }
+  };
+
+  const zoomPercent = Math.round((scale / startScale) * 100);
 
   return (
     <div className="min-h-screen px-4 py-16 flex flex-col items-center justify-start text-center">
@@ -49,27 +83,40 @@ export default function Resume() {
         <div className="flex gap-4 mb-4">
           <button
             onClick={zoomOut}
-            className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-sm"
+            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-md"
           >
-            ➖ Zoom Out
+            - Zoom Out
           </button>
           <button
             onClick={zoomIn}
-            className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-sm"
+            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-md"
           >
-            ➕ Zoom In
+            + Zoom In
           </button>
+
+          <button onClick={toggleFullscreen} className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-600 transition text-md">
+          {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
+        </button>
         </div>
 
         {/* Zoom Indicator */}
         {showZoomIndicator && (
-          <div className="absolute top-48 bg-dark bg-opacity-80 text-sm text-light px-4 py-2 rounded shadow-md z-50 transition-opacity duration-300">
+          <div className="absolute top-48 bg-dark bg-opacity-80 text-sm text-light px-4 py-2 rounded shadow-md z-50 transition-opacity duration-500 ease-in-out animate-fade">
             Zoom: {zoomPercent}%
           </div>
         )}
 
       {/* Scrollable preview container */}
-      <div className="pdf-preview scrollbar-primary">
+      <div className="pdf-preview scrollbar-primary" ref={previewRef}>
+
+      {isFullscreen && (
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-8 right-4 z-50 px-5 py-2 text-md button-primary rounded-xl"
+        >
+          ✖ Exit Fullscreen
+        </button>
+      )}
         <Document
           file="/resume_summer_2025.pdf"
           onLoadSuccess={onDocumentLoadSuccess}
