@@ -27,7 +27,7 @@ function App() {
     <div className="flex flex-col min-h-screen">
       <NavBar />
 
-      <main className="flex-1 relative overflow-hidden">
+      <main className="flex-1 relative">
       <AnimatePresence mode="wait">
 
         <Routes location={location} key={location.pathname}>

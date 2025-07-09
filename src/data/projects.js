@@ -17,13 +17,13 @@ const projects = [
       ]
     },
     
-    {
-      title: 'Crypto Dashboard',
-      description: 'Real-time price tracking and wallet insights.',
-      image: '/images/crypto.png',
+    // {
+    //   title: 'Crypto Dashboard',
+    //   description: 'Real-time price tracking and wallet insights.',
+    //   image: '/images/crypto.png',
       
-      live: 'https://nickfelix.dev'
-    },
+    //   live: 'https://nickfelix.dev'
+    // },
     {
       id: 'axis-med',
       title: 'AxisMED',

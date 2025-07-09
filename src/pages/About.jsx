@@ -1,25 +1,31 @@
 // src/pages/About.jsx
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
+import ProjectTagTicker from '../components/ProjectTagTicker';
+import projectData from '../data/projects';
 
 const timelineData = [
   {
+    title: 'Who I am',
+    description: 'I\'m currently studying CS and Stats at Columbia, building frontends, backends, models, and smart systems. Outside of that, I sprint the 400m and love to surf.',
+  },
+  {
     title: 'The Builder',
     description:
-      'I love making things — apps, systems, or strategies. Whether it’s a digital product or a financial model, I thrive when I’m solving problems with elegant, efficient solutions.',
+      'I love making things. Whether quantitative or qualitative, solving problems and delivering high-quality, efficient solutions is my forte.',
     keywords: ['engineering', 'problem-solving', 'systems', 'full-stack', 'strategy'],
   },
   {
     title: 'The Competitor',
     description:
-      'I’m a 400m sprinter. The discipline, grit, and structure of elite athletics shape how I approach everything — from code to business. I’m calm under pressure and always training for the next level.',
+      'As a 400m sprinter, the discipline and structure of elite athletics shape much of how I approach life. I\’m calm under pressure, calculated/optimized in strategy, and willing to do what it takes for victory',
     keywords: ['athlete', 'track', 'grit', 'discipline', 'performance'],
   },
   {
     title: 'The Analyst',
     description:
-      'With a background in computer science and statistics, I’m constantly looking for patterns — in data, in people, in markets. I love turning noise into insight.',
+      'I perfer interpreting reality by breaking every peice of it to it\'s most fundamental components and building back up. CS and statistics bolster my naturaly analytical mind to better quantify and understand these patterns.',
     keywords: ['data', 'statistics', 'finance', 'algorithms', 'quant'],
   },
   {
@@ -37,7 +43,7 @@ const timelineData = [
   {
     title: 'The Vision',
     description:
-      'I want to build systems that matter — tools that empower people, businesses that make sense, and experiences that leave a mark. I’m just getting started.',
+      'I want to build systems that matter; tools that empower people, businesses that make sense, and experiences that leave a mark. I\’m just getting started.',
     keywords: ['vision', 'impact', 'entrepreneurship', 'product', 'future'],
   },
 ];
@@ -48,6 +54,16 @@ export default function About() {
   const [isRunning, setIsRunning] = useState(false);
   const [facingLeft, setFacingLeft] = useState(false); // false = right
   const nodeRefs = useRef([]);
+
+  const allTags = useMemo(() => {
+    return [...new Set(
+      projectData.flatMap(p => p.tags).filter(tag => typeof tag === 'string')
+    )];
+  }, [projectData]);
+
+  const speedPerItem = 0.75; // seconds per tag (tweak to your liking)
+const duration = allTags.length * speedPerItem;
+
 
   const [hasMoved, setHasMoved] = useState(false); // ← new flag
   const handleArrowClick = (direction) => {
@@ -101,27 +117,19 @@ export default function About() {
     }
   }, [activeIndex]);
   
-  
-  
 
   return (
-    <div className="bg-background ">
-        {/* Hero section */}
-        <div className="text-center py-16">
-            <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
-            <p className="text-muted text-lg max-w-xl mx-auto">
-                I'm a developer, athlete, and builder of interactive digital experiences.
-            </p>
-        </div>
-
-        {/* Split grid Bio Section */}
+    <div className="">
+      <div className='mt-10'>
+        <h1 className='font-bold text-lg mb-4'>Skills, Frameworks, and Technologies</h1>
+        <ProjectTagTicker tags={allTags} />
+      </div>
+        {/* Split grid Bio Hero Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 py-12 max-w-6xl mx-auto">
-            <div>
-                <h2 className="text-2xl font-bold mb-4">Who I Am</h2>
-                <p className="leading-relaxed">
-                I'm currently studying CS and Stats at Columbia, building frontends, backends,
-                and smart systems. Outside of that, I sprint the 400m and explore the edges
-                of design, physics, and finance.
+            <div className="text-center py-16">
+                <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
+                <p className="text-muted text-lg max-w-xl mx-auto">
+                    I'm a developer, athlete, and student of life.
                 </p>
             </div>
             <div className="flex justify-center">
@@ -129,6 +137,10 @@ export default function About() {
             </div>
         </div>
 
+        {/* Instruction above timeline */}
+        <p className="text-center text-sm text-muted">
+          Use the buttons below or your ← / → keyboard arrows to explore.
+        </p>
 
         {/* Timeline section */}
         <div className="relative overflow-hidden pb-12 ">
@@ -149,21 +161,23 @@ export default function About() {
                 nodeRefs={nodeRefs}
                 />
 
-                <div className="relative flex gap-4 justify-center ">
-                    <button
-                        className="px-4 py-2 rounded"
-                        onClick={() => handleArrowClick(-1)}
-                    >
-                        ↑ Prev
-                    </button>
-                    <button
-                        className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-500"
-                        onClick={() => handleArrowClick(1)}
-                    >
-                        ↓ Next
-                    </button>
-                </div>
             </div>
+        </div>
+
+        {/* Sticky nav buttons */}
+        <div className="sticky bottom-10 z-30 flex justify-center gap-4 px-6">
+          <button
+            className="px-4 py-2 rounded button-primary shadow-md"
+            onClick={() => handleArrowClick(-1)}
+          >
+            ← Prev
+          </button>
+          <button
+            className="px-4 py-2 rounded button-primary shadow-md"
+            onClick={() => handleArrowClick(1)}
+          >
+            Next →
+          </button>
         </div>
 
     </div>

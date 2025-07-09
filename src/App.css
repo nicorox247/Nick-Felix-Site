@@ -46,7 +46,7 @@
 }
 
 @utility button-primary {
-  @apply bg-gradient-primary hover:bg-gradient-highlight;
+  @apply text-light bg-gradient-primary hover:bg-gradient-highlight;
 }
 
 @utility pdf-preview{

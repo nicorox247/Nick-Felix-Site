@@ -2,7 +2,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import projectData from '../data/projects'; // adjust path to your data file
+import projectData from '../data/projects';
 import ProjectTagTicker from '../components/ProjectTagTicker';
 
 export default function ProjectDetail() {
