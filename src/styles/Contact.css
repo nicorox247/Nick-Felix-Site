@@ -1,0 +1,9 @@
+@import '../App.css';
+
+@utility input-style {
+    @apply bg-light w-full p-3 rounded border-2;
+}
+
+@utility error-msg {
+    @apply text-error text-base;
+}
