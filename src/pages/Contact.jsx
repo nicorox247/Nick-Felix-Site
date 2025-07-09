@@ -2,6 +2,10 @@ import { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import '../styles/Contact.css';
 
+import { MdEmail, MdPhone, MdLocationOn } from 'react-icons/md';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+
+
 export default function Contact() {
   const form = useRef();
   const [sent, setSent] = useState(false);
@@ -67,23 +71,23 @@ export default function Contact() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Column – Contact Info */}
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-semibold">Let's work together</h2>
           <p className="text-muted">
             I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!
           </p>
-          <div className="space-y-4 text-base">
+          <div className="space-y-4 text-4xl">
             <div className="flex items-center gap-3">
-              <span>📧</span>
-              <span>nf2574@columbia.edu</span>
+              <FaEnvelope className="text-highlight" />
+              <h2 className=''>nf2574@columbia.edu</h2>
             </div>
             <div className="flex items-center gap-3">
-              <span>📞</span>
-              <span>(949)-771-4265</span>
+              <FaPhone className="text-highlight" />
+              <h2 className=''>(949)-771-4265</h2>
             </div>
             <div className="flex items-center gap-3">
-              <span>📍</span>
-              <span>New York, NY</span>
+              <FaMapMarkerAlt className="text-highlight" />
+              <h2 className=''>New York, NY</h2>
             </div>
           </div>
         </div>

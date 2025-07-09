@@ -126,17 +126,41 @@
   color: #888;
 }
 
-body{
+/* body{
   color: var(--color-dark);
   background-color: var(--color-background);
-}
+} */
 
-a{
+/* a{
   color: var(--color-light);
 }
 
 a:hover{
   color: var(--color-highlight);
+} */
+
+@layer base {
+
+  body {
+    @apply text-dark bg-background;
+  }
+
+  h1 {
+    @apply text-5xl font-bold text-dark;
+  }
+
+  h2 {
+    @apply text-4xl font-semibold text-dark;
+  }
+
+  p {
+    @apply text-2xl text-muted;
+  }
+
+  a {
+    @apply text-light;
+  }
+  a:hover{
+    @apply text-highlight;
+  }
 }
-
-
