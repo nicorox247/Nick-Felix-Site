@@ -60,52 +60,86 @@ export default function Contact() {
 
 
   return (
-    <div className="mx-auto px-6 py-20 media-source border-none">
-      <h1 className="text-4xl font-bold mb-4 text-center">Get In Touch!</h1>
-      <p className="text-center mb-10 text-muted">Feel free to reach out via the form below. This will send me an email</p>
+    <div>
+      <h1 className="text-4xl font-bold m-8 text-center">Get In Touch!</h1>
 
-      <form ref={form} onSubmit={sendEmail} className="space-y-6">
+    <div className=" mx-auto px-6 py-20 max-w-[80%] rounded-2xl bg-light ">
 
-        {errors.user_name && <p className="error-msg">{errors.user_name}</p>}
-        <input
-          type="text"
-          name="user_name"
-          placeholder="Your Name"
-          value={formValues.user_name}
-          onChange={handleChange}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Left Column – Contact Info */}
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold">Let's work together</h2>
+          <p className="text-muted">
+            I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!
+          </p>
+          <div className="space-y-4 text-base">
+            <div className="flex items-center gap-3">
+              <span>📧</span>
+              <span>nf2574@columbia.edu</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span>📞</span>
+              <span>(949)-771-4265</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span>📍</span>
+              <span>New York, NY</span>
+            </div>
+          </div>
+        </div>
 
-          className={`input-style ${errors.user_name ? 'border-error' : ''}`}
-        />
-        
-        
-        {errors.user_email && <p className="error-msg">{errors.user_email}</p>}
-        <input
-          type="email"
-          name="user_email"
-          placeholder="Your Email"
-          value={formValues.user_email}
-          onChange={handleChange}
+        {/* Right Column – Contact Form */}
+        <div className="bg-light p-10 rounded-lg border border-muted shadow-lg">
+          <h3 className="text-xl font-semibold mb-1 pt-2">Send a Message</h3>
+          <p className="text-muted mb-6 text-sm">Fill out the form and I’ll get back to you as soon as possible.</p>
 
-          className={`input-style ${errors.user_email ? 'border-error' : ''}`}
-        />
+          <form ref={form} onSubmit={sendEmail} className="space-y-5">
+            <div>
+              {errors.user_name && <p className="error-msg">{errors.user_name}</p>}
+              <input
+                type="text"
+                name="user_name"
+                placeholder="Your Name"
+                value={formValues.user_name}
+                onChange={handleChange}
+                className={`input-style ${errors.user_name ? 'border-error' : ''}`}
+              />
+            </div>
 
-        {errors.message && <p className="error-msg">{errors.message}</p>}
-        <textarea
-          name="message"
-          rows="6"
-          placeholder="Your Message"
-          value={formValues.message}
-          onChange={handleChange}
+            <div>
+              {errors.user_email && <p className="error-msg">{errors.user_email}</p>}
+              <input
+                type="email"
+                name="user_email"
+                placeholder="Your Email"
+                value={formValues.user_email}
+                onChange={handleChange}
+                className={`input-style ${errors.user_email ? 'border-error' : ''}`}
+              />
+            </div>
 
-          className={`input-style ${errors.message ? 'border-error' : ''}`}
-        />
+            <div>
+              {errors.message && <p className="error-msg">{errors.message}</p>}
+              <textarea
+                name="message"
+                rows="5"
+                placeholder="Your Message"
+                value={formValues.message}
+                onChange={handleChange}
+                className={`input-style ${errors.message ? 'border-error' : ''}`}
+              />
+            </div>
 
-        <button type="submit" disabled={loading} className="px-8 py-3 rounded-lg button-primary text-lg">
-          {loading ? 'Sending...' : 'Send'}
-        </button>
+            <button type="submit" disabled={loading} className="w-full px-6 py-3 rounded-lg button-primary text-lg">
+              {loading ? 'Sending...' : 'Send'}
+            </button>
 
-        {sent && <p className="text-green-600 text-md mt-2">Message sent to my email successfully!</p>}
-      </form>
+            {sent && <p className="text-green-600 text-sm pt-2">Message sent to my email successfully!</p>}
+          </form>
+        </div>
+      </div>
+    </div>
     </div>
   );
+
 }
