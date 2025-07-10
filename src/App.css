@@ -46,11 +46,12 @@
 }
 
 @utility button-primary {
+  cursor: pointer;
   @apply text-light bg-gradient-primary hover:bg-gradient-highlight;
 }
 
 @utility pdf-preview{
-  @apply shadow-2xl border rounded-xl overflow-y-scroll max-h-[700px] w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-7xl bg-gradient-highlight text-light;
+  @apply shadow-2xl border rounded-xl overflow-y-scroll max-h-[78vh] w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-7xl bg-gradient-highlight text-light;
   /* ref={previewRef}; */
 
 }
@@ -60,7 +61,8 @@
 }
 
 @utility button-secondary{
-@apply bg-gradient-accent hover:bg-gradient-highlight hover:text-light;
+  cursor: pointer;
+  @apply bg-gradient-accent hover:bg-gradient-highlight hover:text-light;
 }
 
 @utility scrollbar-primary{

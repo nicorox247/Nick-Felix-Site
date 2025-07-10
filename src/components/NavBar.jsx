@@ -6,7 +6,7 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 bg-gradient-primary text-light shadow-md backdrop-blur bg-opacity-90">
-      <nav className="lg:max-w-[85%] mx-auto flex items-center justify-between py-6 px-6 md:px-8">
+      <nav className="lg:max-w-[90%] mx-auto flex items-center justify-between py-3 px-6">
         {/* Logo / Name */}
         <Link
           to="/"

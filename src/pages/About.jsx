@@ -25,7 +25,7 @@ const timelineData = [
   {
     title: 'The Analyst',
     description:
-      'I perfer interpreting reality by breaking every peice of it to it\'s most fundamental components and building back up. CS and statistics bolster my naturaly analytical mind to better quantify and understand these patterns.',
+      'I perfer interpreting reality by breaking every piece of it to it\'s most fundamental components and building back up. CS and statistics bolster my naturally analytical mind to better quantify and understand these patterns.',
     keywords: ['data', 'statistics', 'finance', 'algorithms', 'quant'],
   },
   {
@@ -121,11 +121,11 @@ const duration = allTags.length * speedPerItem;
   return (
     <div className="">
       <div className='mt-10'>
-        <h1 className='font-bold text-lg mb-4'>Skills, Frameworks, and Technologies</h1>
+        <h1 className='text-lg mb-6'>Skills, Frameworks, and Technologies</h1>
         <ProjectTagTicker tags={allTags} />
       </div>
         {/* Split grid Bio Hero Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 py-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 py-12  mx-auto">
             <div className="text-center py-16">
                 <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
                 <p className="text-muted text-lg max-w-xl mx-auto">

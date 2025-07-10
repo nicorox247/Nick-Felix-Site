@@ -21,7 +21,7 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
             <motion.div
               initial={index < 2 ? false : { opacity: 0, y: 50 }}
               whileInView={index === 0 ? {} : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.6 }}
+              viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             
             >
@@ -36,14 +36,14 @@ export default function TimelineNode({ timelineData, activeIndex, nodeRefs }) {
               <h1 className="font-bold text-3xl text-light pb-2">
                 {item.title || item.description}
               </h1>
-              <p className="text-light text-xl! sm:text-lg">
+              <p className="text-light text-xl sm:text-lg">
                 {item.description}
               </p>
             </div>
 
             {/* Connector Line */}
             {index < timelineData.length - 1 && (
-              <div className="h-30 flex justify-center items-center">
+              <div className="h-25 flex justify-center items-center">
                 <div
                   className="w-1 h-full bg-dark"
                   style={{

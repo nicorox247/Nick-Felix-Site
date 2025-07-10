@@ -94,9 +94,16 @@ export default function Resume() {
             + Zoom In
           </button>
 
-          <button onClick={toggleFullscreen} className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-600 transition text-md">
+          <button onClick={toggleFullscreen} className="px-4 py-2 bg-gray-800 text-light rounded-lg hover:bg-violet-800 transition text-md">
           {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
         </button>
+        <a
+          href="/resume_summer_2025.pdf"
+          download
+          className="inline-block button-primary px-6 py-3 rounded-xl shadow transition"
+        >
+          ⬇ Download PDF
+        </a>
         </div>
 
         {/* Zoom Indicator */}
@@ -137,13 +144,6 @@ export default function Resume() {
 
       <p className="text-muted mt-4">Page previewed: 1 of {numPages}</p>
 
-      <a
-        href="/resume_summer_2025.pdf"
-        download
-        className="mt-6 inline-block button-primary px-6 py-3 rounded-xl shadow transition"
-      >
-        ⬇ Download PDF
-      </a>
     </div>
   );
 }
