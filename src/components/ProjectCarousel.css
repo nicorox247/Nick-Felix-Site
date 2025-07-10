@@ -1,4 +1,13 @@
 /* THIS IS THE SWIPER CSS!!! */
+@import '../App.css';
+
+
+@utility slider-box{
+  @apply bg-gradient-primary text-light hover:border-highlight hover:border-2 
+  rounded-4xl shadow-dark h-full max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-3xl 2xl:max-w-5xl 
+  shadow mx-auto min-h-[400px] md:min-h-[500px] lg:min-h-[520px];
+}
+
 .swiper-slide {
     text-align: center;
     font-size: 20px;
@@ -48,7 +57,7 @@
   }
 
   .swiper-pagination {
-    margin-top: 1rem; /* or more if needed */
+    margin-top: 4px; /* or more if needed */
     position: relative;
     z-index: 30;
   }

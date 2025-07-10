@@ -7,3 +7,8 @@
 @utility error-msg {
     @apply text-error text-base;
 }
+
+@utility contact-box {
+
+    @apply mx-auto px-6 py-10 max-w-[95%] md:max-w-[80%] rounded-2xl bg-light;
+}

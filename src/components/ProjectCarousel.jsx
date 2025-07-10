@@ -51,17 +51,17 @@ export default function ProjectCarousel({ projects }) {
       >
         {projects.map((project, index) => (
           <SwiperSlide key={index}>
-            <div className=" bg-gradient-primary text-light hover:border-highlight hover:border-2 rounded-4xl shadow-dark h-full max-w-sm sm:max-w-lg lg:max-w-3xl xl:max-w-4xl shadow mx-auto min-h-[400px] sm:min-h-[500px] lg:min-h-[520px]">
+            <div className="slider-box">
               <Link to={`/projects/${project.id}`} className="block h-full hover:text-highlight">
                 {project.video ? (
                   <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
                 ) : (
                   <img src={project.image} alt={project.title} loading="lazy" className="rounded-t-4xl aspect-video mb-4 object-cover" />
                 )}
-                <h3 className="lg:text-3xl sm:text-xl font-bold mb-2">{project.title}</h3>
-                <p className="lg:text-lg sm:text-sm text-light line-clamp-2">{project.description}</p>
+                <h3 className="lg:text-3xl text-2xl font-bold mb-2">{project.title}</h3>
+                <p className="lg:text-lg text-light line-clamp-2">{project.description}</p>
               </Link>
-                  <div className="relative mt-8 gap-4 pb-10">
+                  <div className="relative mt-2 gap-4 pb-14">
                       {project.github && (
                         <a
                         title="View GitHub Repository"
@@ -69,11 +69,11 @@ export default function ProjectCarousel({ projects }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="GitHub Repository"
-                        className="absolute left-1/4 "
+                        className="absolute left-1/4"
                         onClick={(e) => e.stopPropagation()}
                         >
                                           <svg
-                                          className="size-10 fill-current"
+                                          className="size-11 fill-current"
                                           viewBox="0 0 24 24"
                                           xmlns="http://www.w3.org/2000/svg"
                                           >
@@ -103,7 +103,7 @@ export default function ProjectCarousel({ projects }) {
                         className={"absolute left-3/4"}
                         onClick={(e) => e.stopPropagation()}
                         >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-12">
                               <path fillRule="evenodd" d="M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Zm-10.5 4.5a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z" clipRule="evenodd" />
                               </svg>
 
@@ -123,7 +123,7 @@ export default function ProjectCarousel({ projects }) {
 
 
 
-      <div className="relative mt-80 sm:mt-64 lg:mt-32 xl:mt-16 z-10">
+      <div className="relative mt-40 sm:mt-20 md:mt-14 z-10">
         {/* Scroll Arrow */}
         <div className="absolute z-30 left-1/2 transform -top-16 -translate-x-1/2 text-center opacity-80 text-dark transition-opacity duration-300"
               style={{ opacity: fogOpacity }}>

@@ -65,11 +65,12 @@ export default function Contact() {
 
   return (
     <div className='pb-10 md:pb-5'>
-      <h1 className="text-4xl font-bold m-8 text-center">Get In Touch!</h1>
+      <h1 className="text-4xl font-bold m-6 text-center">Get In Touch!</h1>
 
-    <div className=" mx-auto px-6 py-20 max-w-[95%] md:max-w-[80%] rounded-2xl bg-light">
+    <div className="contact-box">
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
         {/* Left Column – Contact Info */}
         <div className="space-y-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-semibold">Let's work together</h2>
@@ -77,15 +78,15 @@ export default function Contact() {
             I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!
           </p>
           <div className="space-y-4 text-2xl xl:text-3xl">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <FaEnvelope className="text-highlight" />
               <h2 className=''>nf2574@columbia.edu</h2>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <FaPhone className="text-highlight" />
               <h2 className=''>(949)-771-4265</h2>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <FaMapMarkerAlt className="text-highlight" />
               <h2 className=''>New York, NY</h2>
             </div>
