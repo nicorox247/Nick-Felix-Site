@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import './App.css'
-import NavBar from './components/Navbar'
+import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import Layout from "./components/Layout"
 
