@@ -2,12 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- ✅ Favicon: Use your own favicon instead of vite.svg -->
+    <link rel="icon" type="image/jpg" href="/images/avatar.jpg" />
+
+    <!-- ✅ Viewport config for responsive scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ✅ Basic metadata -->
     <title>Nick Felix</title>
+    <meta name="description" content="Portfolio of Nick Felix — developer, athlete, and builder." />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- ✅ Open Graph (Facebook, Instagram, LinkedIn, iMessage, Discord) -->
+    <meta property="og:title" content="Nick Felix" />
+    <meta property="og:description" content="Portfolio of Nick Felix — developer, athlete, and builder." />
+    <meta property="og:image" content="https://nick-felix.vercel.app/images/avatar.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nick-felix.vercel.app/" />
+
+    <!-- ✅ Twitter Card (X / Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nick Felix" />
+    <meta name="twitter:description" content="Portfolio of Nick Felix — developer, athlete, and builder." />
+    <meta name="twitter:image" content="https://nick-felix.vercel.app/images/avatar.jpg" />
+
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- ✅ Use relative path for Vite build (recommended for SPA routing on Vercel) -->
+    <script type="module" src="./src/main.jsx"></script>
   </body>
 </html>

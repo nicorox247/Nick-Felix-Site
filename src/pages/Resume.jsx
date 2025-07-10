@@ -127,7 +127,7 @@ export default function Resume() {
         <Document
           file="/resume_summer_2025.pdf"
           onLoadSuccess={onDocumentLoadSuccess}
-          loading={<p className="text-lg py-10">Loading resume...</p>}
+          loading={<p className="text-lg py-10 animate-pulse text-light">Loading resume...</p>}
         >
           {Array.from(new Array(numPages), (_, index) => (
             <Page
