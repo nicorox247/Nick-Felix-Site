@@ -6,23 +6,23 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 bg-gradient-primary text-light shadow-md backdrop-blur bg-opacity-90">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between p-4 px-6 md:px-8">
+      <nav className="lg:max-w-[85%] mx-auto flex items-center justify-between py-6 px-6 md:px-8">
         {/* Logo / Name */}
         <Link
           to="/"
-          className="text-2xl md:text-3xl font-extrabold tracking-wider hover:text-highlight transition-colors duration-300"
+          className="text-3xl md:text-4xl font-extrabold tracking-wider transition-colors duration-300"
         >
           Nick Felix
         </Link>
 
         {/* Desktop Links */}
-        <ul className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-wider">
+        <ul className="hidden md:flex gap-8 text-sm md:text-md font-semibold uppercase tracking-wider">
           {['projects', 'research', 'about', 'resume', 'contact'].map((page) => (
             <li key={page}>
               <NavLink
                 to={`/${page}`}
                 className={({ isActive }) =>
-                  `transition-colors duration-200 hover:text-highlight ${
+                  `transition-colors duration-200 ${
                     isActive ? '!text-highlight' : ''
                   }`
                 }
@@ -36,7 +36,7 @@ export default function NavBar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 rounded hover:bg-highlight transition-colors"
+          className="md:hidden p-2 rounded hover:bg-highlight transition-colors text-light"
           aria-label="Toggle menu"
         >
           <svg
@@ -59,14 +59,21 @@ export default function NavBar() {
       {isOpen && (
         <div className="md:hidden bg-gradient-primary px-6 pb-4 space-y-2 text-sm font-medium">
           {['projects', 'research', 'about', 'resume', 'contact'].map((page) => (
-            <Link
+            <NavLink
               key={page}
               to={`/${page}`}
               onClick={() => setIsOpen(false)}
-              className="block w-full py-2 text-light hover:text-highlight transition-colors duration-200"
+              
+              className={({ isActive }) =>
+                `block w-full py-2 transition-colors duration-200 ${
+                  isActive ? 'bg-highlight text-dark' : 'hover:bg-highlight hover:text-dark'
+                }`
+              }
+
+              
             >
               {page.charAt(0).toUpperCase() + page.slice(1)}
-            </Link>
+            </NavLink>
           ))}
         </div>
       )}

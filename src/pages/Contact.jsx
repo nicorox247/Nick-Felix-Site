@@ -64,10 +64,10 @@ export default function Contact() {
 
 
   return (
-    <div>
+    <div className='pb-10 md:pb-5'>
       <h1 className="text-4xl font-bold m-8 text-center">Get In Touch!</h1>
 
-    <div className=" mx-auto px-6 py-20 max-w-[80%] rounded-2xl bg-light ">
+    <div className=" mx-auto px-6 py-20 max-w-[95%] md:max-w-[80%] rounded-2xl bg-light">
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Column – Contact Info */}
@@ -76,7 +76,7 @@ export default function Contact() {
           <p className="text-muted">
             I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!
           </p>
-          <div className="space-y-4 text-4xl">
+          <div className="space-y-4 text-2xl xl:text-3xl">
             <div className="flex items-center gap-3">
               <FaEnvelope className="text-highlight" />
               <h2 className=''>nf2574@columbia.edu</h2>

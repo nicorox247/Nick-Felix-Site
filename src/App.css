@@ -146,15 +146,15 @@ a:hover{
   }
 
   h1 {
-    @apply text-5xl font-bold text-dark;
+    @apply text-3xl md:text-5xl font-bold text-dark;
   }
 
   h2 {
-    @apply text-4xl font-semibold text-dark;
+    @apply font-semibold text-dark;
   }
 
   p {
-    @apply text-2xl text-muted;
+    @apply text-lg md:text-2xl text-muted;
   }
 
   a {
