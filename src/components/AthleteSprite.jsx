@@ -44,13 +44,13 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft, node
     }
   }, [activeIndex, frameWidth, frameHeight]);
 
-  console.log({
-    // rect: node.getBoundingClientRect(),
-    scrollX: window.scrollX,
-    scrollY: window.scrollY,
-    frameWidth,
-    frameHeight,
-  });
+  // console.log({
+  //   // rect: node.getBoundingClientRect(),
+  //   scrollX: window.scrollX,
+  //   scrollY: window.scrollY,
+  //   frameWidth,
+  //   frameHeight,
+  // });
   
 
   const col = frame % cols;
