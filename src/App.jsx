@@ -31,7 +31,8 @@ function App() {
       <AnimatePresence mode="wait">
 
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Layout key={location.pathname}> <Homepage /> </Layout>} />
+          {/* <Route path="/" element={<Layout key={location.pathname}> <Homepage /> </Layout>} /> */}
+          <Route path="/" element={<Layout key={location.pathname}> <About /> </Layout>} />
           <Route path="/about" element={<Layout key={location.pathname}> <About /> </Layout>}/>
           <Route path="/contact" element={<Layout key={location.pathname}> <Contact /> </Layout>}/>
           <Route path="/projects" element={<Layout key={location.pathname}> <Projects /> </Layout>}/>

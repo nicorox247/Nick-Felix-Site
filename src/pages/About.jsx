@@ -4,6 +4,7 @@ import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
 import ProjectTagTicker from '../components/ProjectTagTicker';
 import projectData from '../data/projects';
+import '../styles/About.css';
 
 const timelineData = [
   {
@@ -138,7 +139,7 @@ const duration = allTags.length * speedPerItem;
         </div>
 
         {/* Instruction above timeline */}
-        <p className="text-center text-sm text-muted">
+        <p className="text-center text-sm text-muted animate-wave">
           Use the buttons below or your ← / → keyboard arrows to explore.
         </p>
 
