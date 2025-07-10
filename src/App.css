@@ -82,6 +82,10 @@
   @apply bg-gradient-to-l from-primary to-sky-500 via-dark;
 }
 
+@utility flex-center{
+  @apply flex items-center justify-center;
+}
+
 #root {
   /* max-width: 1280px; */
   /* max-width: none; */

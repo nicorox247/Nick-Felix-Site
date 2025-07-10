@@ -1,4 +1,6 @@
+import ComingSoon from '../components/ComingSoon';
+
 export default function Research() {
-    return <div>Research Page</div>;
+    return <ComingSoon/>;
   }
   
