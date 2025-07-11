@@ -36,8 +36,13 @@ export default function AthleteSprite({ activeIndex, isRunning, facingLeft, node
       const containerRect = document.getElementById('timeline-container').getBoundingClientRect();
       const nodeRect = node.getBoundingClientRect();
       
-      const localX = nodeRect.right - containerRect.left - frameWidth / 2;
-      const localY = nodeRect.top - containerRect.top - frameHeight / 2;
+      const nodeIndex = activeIndex;
+      const isLeft = nodeIndex % 2 === 0;
+
+      const localX = isLeft
+        ? nodeRect.left - containerRect.left - frameWidth/3 // top-left corner of node
+        : nodeRect.right - containerRect.left - frameWidth/2; // top-right corner minus sprite width
+      const localY = nodeRect.top - containerRect.top - frameHeight/1.5;
       
       translateRef.current.style.transform = `translate(${localX}px, ${localY}px)`;
       

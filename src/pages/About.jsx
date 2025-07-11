@@ -62,8 +62,49 @@ export default function About() {
     )];
   }, [projectData]);
 
+  const bandTop = window.innerHeight * 0.35;
+  const bandBottom = window.innerHeight * 0.65;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bandTop = window.innerHeight * 0.35;
+      const bandBottom = window.innerHeight * 0.65;
+  
+      let maxVisibleHeight = 0;
+      let bestIndex = activeIndex;
+  
+      nodeRefs.current.forEach((node, index) => {
+        if (!node) return;
+  
+        const rect = node.getBoundingClientRect();
+        const nodeTop = rect.top;
+        const nodeBottom = rect.bottom;
+  
+        const visibleTop = Math.max(nodeTop, bandTop);
+        const visibleBottom = Math.min(nodeBottom, bandBottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+  
+        if (visibleHeight > maxVisibleHeight) {
+          maxVisibleHeight = visibleHeight;
+          bestIndex = index;
+        }
+      });
+  
+      if (bestIndex !== activeIndex) {
+        const direction = bestIndex > activeIndex ? 1 : -1;
+        handleArrowClick(direction);
+        setActiveIndex(bestIndex);
+      }
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeIndex]);
+  
+
+
   const speedPerItem = 0.75; // seconds per tag (tweak to your liking)
-const duration = allTags.length * speedPerItem;
+  const duration = allTags.length * speedPerItem;
 
 
   const [hasMoved, setHasMoved] = useState(false); // ← new flag
@@ -105,18 +146,18 @@ const duration = allTags.length * speedPerItem;
 
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-
-  useEffect(() => {
-    const node = nodeRefs.current[activeIndex];
-    if (node && !isFirstRender) {
-      node.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    } else if (isFirstRender) {
-      setIsFirstRender(false); // allow future scrolls
-    }
-  }, [activeIndex]);
+// Auto Scroll mechanism
+  // useEffect(() => {
+  //   const node = nodeRefs.current[activeIndex];
+  //   if (node && !isFirstRender) {
+  //     node.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'center',
+  //     });
+  //   } else if (isFirstRender) {
+  //     setIsFirstRender(false); // allow future scrolls
+  //   }
+  // }, [activeIndex]);
   
 
   return (
@@ -146,6 +187,18 @@ const duration = allTags.length * speedPerItem;
         {/* Timeline section */}
         <div className="relative overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
+            <div
+  style={{
+    position: 'fixed',
+    top: '35vh',
+    height: '30vh',
+    width: '100%',
+    border: '2px dashed red',
+    pointerEvents: 'none',
+    zIndex: 9999,
+  }}
+/>
+
 
             {/* Wrapper to push entire timeline content down */}
             <div className="relative flex flex-col" id="timeline-container">
@@ -168,13 +221,13 @@ const duration = allTags.length * speedPerItem;
         {/* Sticky nav buttons */}
         <div className="sticky bottom-10 z-30 flex justify-center gap-4 px-6">
           <button
-            className="px-4 py-2 rounded button-primary shadow-md"
+            className="px-4 py-2 rounded button-secondary shadow-md"
             onClick={() => handleArrowClick(-1)}
           >
             ← Prev
           </button>
           <button
-            className="px-4 py-2 rounded button-primary shadow-md"
+            className="px-4 py-2 rounded button-secondary shadow-md"
             onClick={() => handleArrowClick(1)}
           >
             Next →

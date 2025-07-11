@@ -75,11 +75,11 @@
 }
 
 @utility node-left{
-  @apply bg-gradient-to-r from-primary to-sky-500 via-dark;
+  @apply bg-gradient-to-tl from-primary to-sky-500 via-dark;
 }
 
 @utility node-right{
-  @apply bg-gradient-to-l from-primary to-sky-500 via-dark;
+  @apply bg-gradient-to-tr from-primary to-sky-500 via-dark;
 }
 
 @utility flex-center{

@@ -1,9 +1,5 @@
 @import '../App.css';
 
-
-
-
-
 @theme {
     --animate-wave: wave 4s ease-in-out infinite;
     @keyframes wave {
@@ -31,5 +27,13 @@
         transform: rotate(3deg);
       }
     }
-  }
-  
+
+}
+
+@utility bg-node-left{
+    @apply bg-gradient-to-br from-primary to-primary via-dark ;
+}
+
+@utility bg-node-right{
+    @apply bg-gradient-to-bl from-primary to-primary via-dark ;
+}
