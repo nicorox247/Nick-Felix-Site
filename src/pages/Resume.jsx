@@ -28,7 +28,7 @@ export default function Resume() {
     } else if (width >= 768) {
       initialScale = 1.2;
     } else {
-      initialScale = 0.8;
+      initialScale = 0.7;
     }
   
     setScale(initialScale);
@@ -79,32 +79,42 @@ export default function Resume() {
     <div className="min-h-screen px-4 py-16 flex flex-col items-center justify-start text-center">
       <h1 className="text-4xl text-dark font-bold mb-6">📄 My Resume</h1>
 
-        {/* Zoom controls */}
-        <div className="flex gap-4 mb-4">
+      {/* Zoom controls row */}
+      <div className="mb-4 flex flex-col items-center gap-3 md:flex-row md:justify-center md:items-center md:gap-6">
+        <div className="flex gap-4">
           <button
             onClick={zoomOut}
-            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-md"
+            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-sm"
           >
-            - Zoom Out
+            – Zoom Out
           </button>
           <button
             onClick={zoomIn}
-            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-md"
+            className="px-4 py-2 button-secondary rounded-lg transition duration-50 text-sm"
           >
             + Zoom In
           </button>
-
-          <button onClick={toggleFullscreen} className="px-4 py-2 bg-gray-800 text-light rounded-lg hover:bg-violet-800 transition text-md">
-          {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
-        </button>
-        <a
-          href="/resume_summer_2025.pdf"
-          download
-          className="inline-block button-primary px-6 py-3 rounded-xl shadow transition"
-        >
-          ⬇ Download PDF
-        </a>
         </div>
+
+        {/* Fullscreen/Download row */}
+        <div className="flex gap-4">
+          <button
+            onClick={toggleFullscreen}
+            className="px-4 py-2 bg-gray-800 text-light rounded-lg hover:bg-violet-800 transition text-sm"
+          >
+            {isFullscreen ? '⛶ Exit Fullscreen' : '⛶ Fullscreen'}
+          </button>
+          <a
+            href="/resume_summer_2025.pdf"
+            download
+            className="inline-block button-primary px-6 py-3 rounded-xl shadow transition text-sm"
+          >
+            ⬇ Download PDF
+          </a>
+        </div>
+      </div>
+
+
 
         {/* Zoom Indicator */}
         {showZoomIndicator && (
