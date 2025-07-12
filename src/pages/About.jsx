@@ -55,6 +55,8 @@ export default function About() {
   const [isRunning, setIsRunning] = useState(false);
   const [facingLeft, setFacingLeft] = useState(false); // false = right
   const nodeRefs = useRef([]);
+  const scrollCooldown = useRef(false);
+
 
   const allTags = useMemo(() => {
     return [...new Set(
@@ -62,38 +64,60 @@ export default function About() {
     )];
   }, [projectData]);
 
-  const bandTop = window.innerHeight * 0.35;
-  const bandBottom = window.innerHeight * 0.65;
+  // const bandTop = window.innerHeight * 0.35;
+  // const bandBottom = window.innerHeight * 0.65;
+
+
+
 
   useEffect(() => {
+    let ticking = false;
+  
     const handleScroll = () => {
-      const bandTop = window.innerHeight * 0.35;
-      const bandBottom = window.innerHeight * 0.65;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const viewportHeight = window.innerHeight;
+          const isMobile = viewportHeight < 768;
+          const bandTop = viewportHeight * (isMobile ? 0.35 : 0.45);
+          const bandBottom = viewportHeight * (isMobile ? 0.65 : 0.55);
+          const bandHeight = bandBottom - bandTop;
+          const minDominanceThreshold = bandHeight * 0.15;
   
-      let maxVisibleHeight = 0;
-      let bestIndex = activeIndex;
+          let maxVisibleHeight = 0;
+          let bestIndex = activeIndex;
   
-      nodeRefs.current.forEach((node, index) => {
-        if (!node) return;
+          nodeRefs.current.forEach((node, index) => {
+            if (!node) return;
+            const rect = node.getBoundingClientRect();
+            const visibleTop = Math.max(rect.top, bandTop);
+            const visibleBottom = Math.min(rect.bottom, bandBottom);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
   
-        const rect = node.getBoundingClientRect();
-        const nodeTop = rect.top;
-        const nodeBottom = rect.bottom;
+            if (visibleHeight > maxVisibleHeight) {
+              maxVisibleHeight = visibleHeight;
+              bestIndex = index;
+            }
+          });
   
-        const visibleTop = Math.max(nodeTop, bandTop);
-        const visibleBottom = Math.min(nodeBottom, bandBottom);
-        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          if (
+            bestIndex !== activeIndex &&
+            maxVisibleHeight > bandHeight * 0.2 && // stronger filter
+            !scrollCooldown.current
+          ) {
+            const direction = bestIndex > activeIndex ? 1 : -1;
+            handleArrowClick(direction);
+            setActiveIndex(bestIndex);
   
-        if (visibleHeight > maxVisibleHeight) {
-          maxVisibleHeight = visibleHeight;
-          bestIndex = index;
-        }
-      });
+            scrollCooldown.current = true;
+            setTimeout(() => {
+              scrollCooldown.current = false;
+            }, 300); // Cooldown between scroll transitions
+          }
   
-      if (bestIndex !== activeIndex) {
-        const direction = bestIndex > activeIndex ? 1 : -1;
-        handleArrowClick(direction);
-        setActiveIndex(bestIndex);
+          ticking = false;
+        });
+  
+        ticking = true;
       }
     };
   
@@ -101,13 +125,16 @@ export default function About() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activeIndex]);
   
+  
 
 
   const speedPerItem = 0.75; // seconds per tag (tweak to your liking)
   const duration = allTags.length * speedPerItem;
 
 
-  const [hasMoved, setHasMoved] = useState(false); // ← new flag
+  // const [hasMoved, setHasMoved] = useState(false); // ← new flag
+  const hasMoved = useRef(false);
+
   const handleArrowClick = (direction) => {
     const newIndex = activeIndex + direction;
   
@@ -116,13 +143,13 @@ export default function About() {
       setActiveIndex(newIndex);
       
       // Toggle direction every time we move (except on initial render)
-      if (hasMoved) {
+      if (hasMoved.current) {
         setFacingLeft((prev) => !prev);
       }
 
       // Set the movement flag once we leave the first node
-      if (!hasMoved && newIndex !== 0) {
-        setHasMoved(true);
+      if (!hasMoved.current && newIndex !== 0) {
+        hasMoved.current = true;;
       }
   
       setTimeout(() => {
@@ -190,8 +217,8 @@ export default function About() {
             <div
   style={{
     position: 'fixed',
-    top: '35vh',
-    height: '30vh',
+    top: '45vh',
+    height: '10vh',
     width: '100%',
     border: '2px dashed red',
     pointerEvents: 'none',
