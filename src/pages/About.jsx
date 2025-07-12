@@ -70,7 +70,7 @@ export default function About() {
     setIsRunning(true);
     setActiveIndex(newIndex);
     setFacingLeft(newIndex % 2 === 0);     // parity-based
-    setTimeout(() => setIsRunning(false), 100);
+    setTimeout(() => setIsRunning(false), 700);
   };
 
   // Simplified scroll logic:
@@ -94,9 +94,10 @@ export default function About() {
         });
 
         if (newActive !== activeIndex) {
-          setActiveIndex(newActive);
-          setFacingLeft(newActive % 2 === 0);
+          const direction = newActive > activeIndex ? 1 : -1;
+          handleArrowClick(direction);
         }
+
         ticking = false;
       });
     };
@@ -105,18 +106,28 @@ export default function About() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [activeIndex]);
 
-// Auto Scroll mechanism
-  // useEffect(() => {
-  //   const node = nodeRefs.current[activeIndex];
-  //   if (node && !isFirstRender) {
-  //     node.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'center',
-  //     });
-  //   } else if (isFirstRender) {
-  //     setIsFirstRender(false); // allow future scrolls
-  //   }
-  // }, [activeIndex]);
+  useEffect(() => {
+    const onKey = e => {
+      if (e.key === 'ArrowLeft') handleArrowClick(-1);
+      if (e.key === 'ArrowRight') handleArrowClick(1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [handleArrowClick]);
+  
+
+// // Auto Scroll mechanism
+//   useEffect(() => {
+//     const node = nodeRefs.current[activeIndex];
+//     if (node && !isFirstRender) {
+//       node.scrollIntoView({
+//         behavior: 'smooth',
+//         block: 'center',
+//       });
+//     } else if (isFirstRender) {
+//       setIsFirstRender(false); // allow future scrolls
+//     }
+//   }, [activeIndex]);
   
 
   return (
