@@ -59,9 +59,9 @@ export default function ProjectDetail() {
 
         </div>
 
-        <div className="bg-gradient-to-b from-primary to-dark text-light py-10 text-center">
+        <div className="text-light py-10 text-center">
         <h2 className="text-2xl font-semibold">Want to see more?</h2>
-        <Link to="/projects" className="underline">
+        <Link to="/projects" className="underline wave-animation">
             Back to All Projects
         </Link>
         </div>

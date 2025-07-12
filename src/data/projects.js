@@ -1,29 +1,5 @@
 const projects = [
-    {
-      id: 'personal-portfolio',
-      title: 'Personal Portfolio',
-      description: 'A dynamic homepage featuring animated interaction zones.',
-      video: '/videos/portfolio-demo.mov',
-      image: '/images/crypto.png', // optional fallback or thumbnail image
-      github: 'https://github.com/nicorox247/Nick-Felix-Site',
-      live: 'https://nick-felix.vercel.app/',
-      tags: ['React', 'Tailwind CSS', 'Canvas', 'Vite', 'game'],
-      date: '2025-06-30', // Update to actual release date if needed
-      featured: false,
-      content: `This project showcases my personal website, built with React, Tailwind CSS, and Vite. It features a custom canvas animation system with mouse-following interaction zones and a dynamic homepage layout. The site serves as both a portfolio and a playground for web UI experimentation.`,
-      images: [
-        '/images/portfolio/homepage.png',
-        '/images/portfolio/interaction-zone.png'
-      ]
-    },
     
-    // {
-    //   title: 'Crypto Dashboard',
-    //   description: 'Real-time price tracking and wallet insights.',
-    //   image: '/images/crypto.png',
-      
-    //   live: 'https://nickfelix.dev'
-    // },
     {
       id: 'axis-med',
       title: 'AxisMED',
@@ -64,6 +40,24 @@ const projects = [
       videos: [
         '/videos/muscle-map/muscle-map-demo1.mov',
         '/videos/muscle-map/muscle-map-demo2.mov'
+      ]
+    },
+
+    {
+      id: 'personal-portfolio',
+      title: 'Personal Portfolio',
+      description: 'A dynamic homepage featuring animated interaction zones and my portfolio.',
+      video: '/videos/nick-felix/portfolio-demo.mov',
+      image: '/images/nick-felix/nick-felix-hp.png', // optional fallback or thumbnail image
+      github: 'https://github.com/nicorox247/Nick-Felix-Site',
+      live: 'https://nick-felix.vercel.app/',
+      tags: ['React', 'Tailwind CSS', 'Canvas', 'Vite', 'game'],
+      date: '2025-06-30', // Update to actual release date if needed
+      featured: false,
+      content: `This project showcases my personal website, built with React, Tailwind CSS, and Vite. It features a custom canvas animation system with mouse-following interaction zones and a dynamic homepage layout. The site serves as both a portfolio and a playground for web UI experimentation.`,
+      images: [
+        '/images/portfolio/homepage.png',
+        '/images/portfolio/interaction-zone.png'
       ]
     },
     
