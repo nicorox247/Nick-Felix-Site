@@ -29,7 +29,7 @@ export default function ProjectDetail() {
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">{project.title}</h1>
             <p className="text-lg max-w-2xl mx-auto text-muted/80">{project.description}</p>
             {project.video ? (
-                <video src={project.video} controls muted className="media-source" />
+                <video src={project.video} controls muted playsInline className="media-source" />
             ) : (
                 <img src={project.image} alt={project.title} className="media-source" />
             )}
@@ -59,9 +59,9 @@ export default function ProjectDetail() {
 
         </div>
 
-        <div className="text-light py-10 text-center">
+        <div className="text-dark py-10 text-center">
         <h2 className="text-2xl font-semibold">Want to see more?</h2>
-        <Link to="/projects" className="underline wave-animation">
+        <Link to="/projects" className="underline">
             Back to All Projects
         </Link>
         </div>
