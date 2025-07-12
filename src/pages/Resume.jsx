@@ -28,7 +28,7 @@ export default function Resume() {
     } else if (width >= 768) {
       initialScale = 1.2;
     } else {
-      initialScale = 0.7;
+      initialScale = 0.55;
     }
   
     setScale(initialScale);
