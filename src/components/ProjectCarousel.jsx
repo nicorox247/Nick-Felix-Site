@@ -54,7 +54,7 @@ export default function ProjectCarousel({ projects }) {
             <div className="slider-box">
               <Link to={`/projects/${project.id}`} className="block h-full hover:text-highlight">
                 {project.video ? (
-                  <video src={project.video} autoPlay loop muted className="rounded-t-4xl aspect-video mb-4 object-cover" />
+                  <video src={project.video} autoPlay loop muted playsInline className="rounded-t-4xl aspect-video mb-4 object-cover" />
                 ) : (
                   <img src={project.image} alt={project.title} loading="lazy" className="rounded-t-4xl aspect-video mb-4 object-cover" />
                 )}

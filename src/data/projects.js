@@ -6,7 +6,7 @@ const projects = [
       video: '/videos/portfolio-demo.mov',
       image: '/images/crypto.png', // optional fallback or thumbnail image
       github: 'https://github.com/nicorox247/Nick-Felix-Site',
-      live: 'https://nickfelix.dev',
+      live: 'https://nick-felix.vercel.app/',
       tags: ['React', 'Tailwind CSS', 'Canvas', 'Vite', 'game'],
       date: '2025-06-30', // Update to actual release date if needed
       featured: false,
@@ -31,7 +31,7 @@ const projects = [
       image: '/images/axis-med/axis-med-hp.png', // Update with actual screenshot path
       video: '/videos/axis-med/axis-med-demo.mov', // Optional
       live: 'https://axis-med.vercel.app/',
-      github: '', // Leave blank or update if public
+      github: 'https://github.com/nicorox247/axis-med', // Leave blank or update if public
       tags: ['React', 'Tailwind CSS', 'Vite', 'Java Script', 'Healthcare', 'Design'],
       date: '2025-07-01',
       featured: true,
@@ -67,11 +67,7 @@ const projects = [
       ]
     },
     
-    {
-      title: 'Poopy peepee',
-      description: 'potty timeeeeee',
-      image: '/images/crypto.png',
-    },
+
     // Add more projects as needed
   ];
 
