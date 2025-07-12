@@ -1,5 +1,5 @@
 // src/pages/About.jsx
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
 import ProjectTagTicker from '../components/ProjectTagTicker';
@@ -56,6 +56,9 @@ export default function About() {
   const [isRunning, setIsRunning] = useState(false);
   const [facingLeft, setFacingLeft] = useState(false);
   const nodeRefs = useRef([]);
+  const arrowTriggeredRef = useRef(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
 
   const allTags = useMemo(
     () => [...new Set(projectData.flatMap(p => p.tags).filter(t => typeof t === 'string'))],
@@ -63,15 +66,16 @@ export default function About() {
   );
 
   // Arrow / jump handler stays the same:
-  const handleArrowClick = (direction) => {
+  const handleArrowClick = useCallback((direction) => {
     const newIndex = activeIndex + direction;
     if (newIndex < 0 || newIndex >= timelineData.length) return;
 
+    arrowTriggeredRef.current = true;
     setIsRunning(true);
     setActiveIndex(newIndex);
     setFacingLeft(newIndex % 2 === 0);     // parity-based
     setTimeout(() => setIsRunning(false), 700);
-  };
+  }, [activeIndex]);
 
   // Simplified scroll logic:
   useEffect(() => {
@@ -96,6 +100,7 @@ export default function About() {
         if (newActive !== activeIndex) {
           const direction = newActive > activeIndex ? 1 : -1;
           handleArrowClick(direction);
+          arrowTriggeredRef.current = false;
         }
 
         ticking = false;
@@ -116,18 +121,18 @@ export default function About() {
   }, [handleArrowClick]);
   
 
-// // Auto Scroll mechanism
-//   useEffect(() => {
-//     const node = nodeRefs.current[activeIndex];
-//     if (node && !isFirstRender) {
-//       node.scrollIntoView({
-//         behavior: 'smooth',
-//         block: 'center',
-//       });
-//     } else if (isFirstRender) {
-//       setIsFirstRender(false); // allow future scrolls
-//     }
-//   }, [activeIndex]);
+  //Arrow click auto scroll
+  // useEffect(() => {
+  //   const node = nodeRefs.current[activeIndex];
+  //   if (!isFirstRender && arrowTriggeredRef.current && node) {
+  //     node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  //     arrowTriggeredRef.current = false;
+  //   }
+  //   if (isFirstRender) {
+  //     setIsFirstRender(false);
+  //   }
+  // }, [activeIndex]);
+  
   
 
   return (
@@ -151,23 +156,27 @@ export default function About() {
 
         {/* Instruction above timeline */}
         <p className="text-center text-sm text-muted animate-wave">
-          Use the buttons below or your ← / → keyboard arrows to explore.
+          Scroll to explore.
         </p>
+        {/* <p className="text-center text-sm text-muted animate-wave">
+          Scroll or click ← / → keyboard arrows to explore.
+        </p> */}
 
         {/* Timeline section */}
         <div className="relative overflow-hidden pb-12 ">
             <h1 className="text-4xl font-bold text-center pt-10 pb-6">About Me</h1>
-            <div
-  style={{
-    position: 'fixed',
-    top: '50vh',
-    height: '1px',
-    width: '100%',
-    border: '2px dashed red',
-    pointerEvents: 'none',
-    zIndex: 9999,
-  }}
-/>
+
+            {/* Scrolling Debugger div */}
+            {/* <div 
+            style={{
+              position: 'fixed',
+              top: '50vh',
+              height: '1px',
+              width: '100%',
+              border: '2px dashed red',
+              pointerEvents: 'none',
+              zIndex: 9999,
+            }}/> */}
 
 
             {/* Wrapper to push entire timeline content down */}
@@ -189,7 +198,7 @@ export default function About() {
         </div>
 
         {/* Sticky nav buttons */}
-        <div className="sticky bottom-10 z-30 flex justify-center gap-4 px-6">
+        {/* <div className="sticky bottom-10 z-30 flex justify-center gap-4 px-6">
           <button
             className="px-4 py-2 rounded button-secondary shadow-md"
             onClick={() => handleArrowClick(-1)}
@@ -202,7 +211,7 @@ export default function About() {
           >
             Next →
           </button>
-        </div>
+        </div> */}
 
     </div>
   );

@@ -37,3 +37,15 @@
 @utility bg-node-right{
     @apply bg-gradient-to-bl from-primary to-primary via-dark ;
 }
+
+/* @utility debug-scroll{
+
+    position: 'fixed';
+    top: '50vh';
+    height: '1px';
+    width: '100%';
+    border: '2px dashed red';
+    pointerEvents: 'none';
+    zIndex: 9999;
+
+} */
