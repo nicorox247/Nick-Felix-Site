@@ -50,128 +50,60 @@ const timelineData = [
 ];
 
 
+
 export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [facingLeft, setFacingLeft] = useState(false); // false = right
+  const [facingLeft, setFacingLeft] = useState(false);
   const nodeRefs = useRef([]);
-  const scrollCooldown = useRef(false);
 
+  const allTags = useMemo(
+    () => [...new Set(projectData.flatMap(p => p.tags).filter(t => typeof t === 'string'))],
+    [projectData]
+  );
 
-  const allTags = useMemo(() => {
-    return [...new Set(
-      projectData.flatMap(p => p.tags).filter(tag => typeof tag === 'string')
-    )];
-  }, [projectData]);
-
-  // const bandTop = window.innerHeight * 0.35;
-  // const bandBottom = window.innerHeight * 0.65;
-
-
-
-
-  useEffect(() => {
-    let ticking = false;
-  
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const viewportHeight = window.innerHeight;
-          const isMobile = viewportHeight < 768;
-          const bandTop = viewportHeight * (isMobile ? 0.35 : 0.45);
-          const bandBottom = viewportHeight * (isMobile ? 0.65 : 0.55);
-          const bandHeight = bandBottom - bandTop;
-          const minDominanceThreshold = bandHeight * 0.15;
-  
-          let maxVisibleHeight = 0;
-          let bestIndex = activeIndex;
-  
-          nodeRefs.current.forEach((node, index) => {
-            if (!node) return;
-            const rect = node.getBoundingClientRect();
-            const visibleTop = Math.max(rect.top, bandTop);
-            const visibleBottom = Math.min(rect.bottom, bandBottom);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-  
-            if (visibleHeight > maxVisibleHeight) {
-              maxVisibleHeight = visibleHeight;
-              bestIndex = index;
-            }
-          });
-  
-          if (
-            bestIndex !== activeIndex &&
-            maxVisibleHeight > bandHeight * 0.2 && // stronger filter
-            !scrollCooldown.current
-          ) {
-            const direction = bestIndex > activeIndex ? 1 : -1;
-            handleArrowClick(direction);
-            setActiveIndex(bestIndex);
-  
-            scrollCooldown.current = true;
-            setTimeout(() => {
-              scrollCooldown.current = false;
-            }, 300); // Cooldown between scroll transitions
-          }
-  
-          ticking = false;
-        });
-  
-        ticking = true;
-      }
-    };
-  
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeIndex]);
-  
-  
-
-
-  const speedPerItem = 0.75; // seconds per tag (tweak to your liking)
-  const duration = allTags.length * speedPerItem;
-
-
-  // const [hasMoved, setHasMoved] = useState(false); // ← new flag
-  const hasMoved = useRef(false);
-
+  // Arrow / jump handler stays the same:
   const handleArrowClick = (direction) => {
     const newIndex = activeIndex + direction;
-  
-    if (newIndex >= 0 && newIndex < timelineData.length) {
-      setIsRunning(true);
-      setActiveIndex(newIndex);
-      
-      // Toggle direction every time we move (except on initial render)
-      if (hasMoved.current) {
-        setFacingLeft((prev) => !prev);
-      }
+    if (newIndex < 0 || newIndex >= timelineData.length) return;
 
-      // Set the movement flag once we leave the first node
-      if (!hasMoved.current && newIndex !== 0) {
-        hasMoved.current = true;;
-      }
-  
-      setTimeout(() => {
-        setIsRunning(false);
-      }, 700);
-    }
+    setIsRunning(true);
+    setActiveIndex(newIndex);
+    setFacingLeft(newIndex % 2 === 0);     // parity-based
+    setTimeout(() => setIsRunning(false), 100);
   };
 
+  // Simplified scroll logic:
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        handleArrowClick(-1); // Left = Previous
-      } else if (e.key === 'ArrowRight') {
-        handleArrowClick(1); // Right = Next
-      }
-    };
-  
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIndex, isRunning, hasMoved]); // dependencies that affect movement
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const midY = window.innerHeight / 2;
+        const bandTop = midY;
+        const bandBottom = midY + 1;  // 1px tall
 
-  const [isFirstRender, setIsFirstRender] = useState(true);
+        let newActive = activeIndex;
+        nodeRefs.current.forEach((node, i) => {
+          if (!node) return;
+          const { top, bottom } = node.getBoundingClientRect();
+          if (top < bandBottom && bottom > bandTop) {
+            newActive = i;
+          }
+        });
+
+        if (newActive !== activeIndex) {
+          setActiveIndex(newActive);
+          setFacingLeft(newActive % 2 === 0);
+        }
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [activeIndex]);
 
 // Auto Scroll mechanism
   // useEffect(() => {
@@ -217,8 +149,8 @@ export default function About() {
             <div
   style={{
     position: 'fixed',
-    top: '45vh',
-    height: '10vh',
+    top: '50vh',
+    height: '1px',
     width: '100%',
     border: '2px dashed red',
     pointerEvents: 'none',
