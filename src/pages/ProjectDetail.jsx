@@ -29,7 +29,7 @@ export default function ProjectDetail() {
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">{project.title}</h1>
             <p className="text-lg max-w-2xl mx-auto text-muted/80">{project.description}</p>
             {project.video ? (
-                <video src={project.video} controls muted playsInline className="media-source" />
+                <video src={project.video} autoPlay loop controls muted playsInline className="media-source" />
             ) : (
                 <img src={project.image} alt={project.title} className="media-source" />
             )}
