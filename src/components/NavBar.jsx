@@ -5,7 +5,7 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-primary text-light shadow-md backdrop-blur bg-opacity-90">
+    <header className="sticky top-0 z-50 bg-gradient-primary text-light shadow-md backdrop-blur">
       <nav className="lg:max-w-[90%] mx-auto flex items-center justify-between py-3 px-6">
         {/* Logo / Name */}
         <Link
@@ -36,7 +36,7 @@ export default function NavBar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 rounded hover:bg-highlight transition-colors text-light"
+          className="md:hidden p-2 bg-transparent rounded hover:bg-highlight transition-colors text-light cursor-pointer"
           aria-label="Toggle menu"
         >
           <svg
