@@ -61,7 +61,7 @@ export default function About() {
 
 
   const allTags = useMemo(
-    () => [...new Set(projectData.flatMap(p => p.tags).filter(t => typeof t === 'string'))],
+    () => [...new Set(projectData.flatMap(p => p.stack).filter(t => typeof t === 'string'))],
     [projectData]
   );
 
@@ -84,7 +84,7 @@ export default function About() {
       if (ticking) return;
       ticking = true;
       window.requestAnimationFrame(() => {
-        const midY = window.innerHeight / 2;
+        const midY = window.innerHeight * 4/6;
         const bandTop = midY;
         const bandBottom = midY + 1;  // 1px tall
 

@@ -8,6 +8,7 @@ const projects = [
       video: '/videos/axis-med/axis-med-demo.mov', // Optional
       live: 'https://axis-med.vercel.app/',
       github: 'https://github.com/nicorox247/axis-med', // Leave blank or update if public
+      stack: ['React', 'Tailwind CSS', 'Vite', 'Java Script'],
       tags: ['React', 'Tailwind CSS', 'Vite', 'Java Script', 'Healthcare', 'Design'],
       date: '2025-07-01',
       featured: true,
@@ -29,6 +30,7 @@ const projects = [
       video: '/videos/muscle-map/muscle-map-demo1.mov', // optional: could add a demo video later
       github: 'https://github.com/nicorox247/musclemap', // update if private or unlinked
       live: '', // optional: add deployment link if it's hosted
+      stack: ['JavaScript', 'Flask', 'Python', 'css', 'html', 'Bootstrap'],
       tags: ['JavaScript', 'Flask', 'Python', 'css', 'html', 'Bootstrap', 'Anatomy', 'Fitness'],
       date: '2025-04-20', // update with accurate release date
       featured: true,
@@ -51,6 +53,7 @@ const projects = [
       image: '/images/nick-felix/nick-felix-hp.png', // optional fallback or thumbnail image
       github: 'https://github.com/nicorox247/Nick-Felix-Site',
       live: 'https://nick-felix.vercel.app/',
+      stack: ['React', 'Tailwind CSS', 'Canvas', 'Vite'],
       tags: ['React', 'Tailwind CSS', 'Canvas', 'Vite', 'game'],
       date: '2025-06-30', // Update to actual release date if needed
       featured: false,

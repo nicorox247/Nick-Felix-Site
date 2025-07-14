@@ -26,11 +26,11 @@ export default function ProjectTagTicker({ tags = [] }) {
         ];
       }, [tags]);
 
-      const speedPerItem = 1; // seconds per tag (tweak to your liking)
+      const speedPerItem = 1.4; // seconds per tag (tweak to your liking)
       const duration = repeatedTags.length * speedPerItem;
   
     return (
-      <div className="relative overflow-hidden bg-background h-12 max-w-lg lg:max-w-xl xl:max-w-4xl mx-auto">
+      <div className="relative overflow-hidden bg-background h-12 max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto">
         <div className="absolute whitespace-nowrap animate-ticker flex items-center gap-8 px-4"
             style={{ animation: `ticker ${duration}s linear infinite` }}>
           {repeatedTags.map((tag, index) => (
