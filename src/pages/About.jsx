@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import AthleteSprite from '../components/AthleteSprite';
 import TimelineNode from '../components/TimelineNode';
 import ProjectTagTicker from '../components/ProjectTagTicker';
+import AvatarFlicker from '../components/AvatarFlicker';
 import projectData from '../data/projects';
 import '../styles/About.css';
 
@@ -150,7 +151,7 @@ export default function About() {
                 </p>
             </div>
             <div className="flex justify-center">
-                <img src="/images/avatar.jpg" alt="Avatar" className="rounded-full w-56 h-56 object-cover shadow-lg" />
+                <AvatarFlicker/>
             </div>
         </div>
 

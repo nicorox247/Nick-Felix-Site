@@ -28,6 +28,72 @@
       }
     }
 
+    --animate-flicker: flicker 1.8s ease-in-out forwards;
+
+    @keyframes flicker {
+      0%, 15% {
+        opacity: 1;
+        filter: brightness(1) blur(0);
+      }
+      25% {
+        opacity: 0.9;
+        filter: brightness(1.2) blur(0.2px);
+      }
+      35% {
+        opacity: 1;
+        filter: brightness(1);
+      }
+      50% {
+        opacity: 0.5;
+        filter: brightness(2) blur(1px);
+      }
+      60% {
+        opacity: 0.8;
+        filter: brightness(1.5);
+      }
+      70% {
+        opacity: 0.2;
+        filter: brightness(2.5) blur(1.5px);
+      }
+      75% {
+        opacity: 1;
+        filter: brightness(1);
+      }
+      80% {
+        opacity: 0.3;
+        filter: brightness(1.8) blur(0.8px);
+      }
+      85% {
+        opacity: 0.7;
+        filter: brightness(2.2);
+      }
+      90% {
+        opacity: 0.1;
+        filter: brightness(3) blur(2px);
+      }
+      100% {
+        opacity: 1;
+        filter: brightness(1) blur(0);
+      }
+    }
+    
+
+    /* 
+    
+            flicker: {
+      '0%, 100%': { opacity: '1', filter: 'brightness(1) blur(0)' },
+      '10%': { opacity: '0.2', filter: 'brightness(2) blur(1px)' },
+      '20%': { opacity: '0.6', filter: 'brightness(0.8)' },
+      '30%': { opacity: '0.1', filter: 'brightness(1.5) blur(0.5px)' },
+      '40%': { opacity: '0.9', filter: 'brightness(1)' },
+      '50%': { opacity: '0.3', filter: 'brightness(2.5) blur(1.5px)' },
+      '60%': { opacity: '1', filter: 'brightness(1.2)' },
+      '70%': { opacity: '0.4', filter: 'brightness(0.5) blur(1px)' },
+      '80%': { opacity: '1', filter: 'brightness(1)' },
+      '90%': { opacity: '0.2', filter: 'brightness(1.8)' },
+    */
+      
+
 }
 
 @utility bg-node-left{
@@ -37,6 +103,8 @@
 @utility bg-node-right{
     @apply bg-gradient-to-bl from-primary to-primary via-dark ;
 }
+
+
 
 /* @utility debug-scroll{
 
