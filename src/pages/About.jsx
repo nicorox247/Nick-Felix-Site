@@ -143,11 +143,11 @@ export default function About() {
         <ProjectTagTicker tags={allTags} />
       </div>
         {/* Split grid Bio Hero Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 py-12  mx-auto">
-            <div className="text-center py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 sm:gap-10 items-center px-6 py-12 mx-auto">
+            <div className="text-center py-10 sm:py-16">
                 <h1 className="text-4xl font-bold mb-4">Hey, I'm Nick 👋</h1>
                 <p className="text-muted text-lg max-w-xl mx-auto">
-                    I'm a developer, athlete, and student of life.
+                    I'm a developer, statistician, athlete, and student of life.
                 </p>
             </div>
             <div className="flex justify-center">
