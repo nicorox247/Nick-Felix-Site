@@ -135,7 +135,7 @@ export default function Resume() {
         </button>
       )}
         <Document
-          file="/resume_summer_2025.pdf"
+          file="/Nick's_Resume_Fall_2025.pdf"
           onLoadSuccess={onDocumentLoadSuccess}
           loading={<p className="text-lg py-10 animate-pulse text-light">Loading resume...</p>}
         >
