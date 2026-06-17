@@ -170,3 +170,16 @@ a:hover{
     @apply text-highlight;
   }
 }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes comet-dash {
+  to { stroke-dashoffset: -1008; }
+}
+
+@utility animate-bob {
+  animation: bob 2.4s ease-in-out infinite;
+}
