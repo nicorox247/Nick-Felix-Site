@@ -2,14 +2,15 @@ import { useRef, useEffect } from 'react';
 
 export default function SpriteCanvas({
   spriteImage,
+  zones = [],
   idleRadius = 80,
   scale = 1.7,
   runningFrames = [1, 2, 3, 4],
   gridCols = 2,
-  maxEase = 0.0002,
-  minEase = 0.00005,
+  maxEase = 0.01,
+  minEase = 0.0001,
   lockInDelay = 600,
-  onPlayerMove,
+  onZoneChange,
 }) {
   const canvasRef = useRef(null);
   const sprite = useRef(new Image());
@@ -22,29 +23,35 @@ export default function SpriteCanvas({
   const lastMouseDelta = useRef({ x: 0, y: 0 });
   const lastChangeTimestamp = useRef(Date.now());
 
+  // Keep zones and callback in refs so the RAF loop never needs to restart
+  const zonesRef = useRef(zones);
+  const onZoneChangeRef = useRef(onZoneChange);
+  const activeZoneIdRef = useRef(null);
+
+  useEffect(() => { zonesRef.current = zones; }, [zones]);
+  useEffect(() => { onZoneChangeRef.current = onZoneChange; }, [onZoneChange]);
+
   useEffect(() => {
     sprite.current.src = spriteImage;
 
     const updateMouse = (e) => {
+      if (!canvasRef.current) return;
       const rect = canvasRef.current.getBoundingClientRect();
-      mousePos.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
+      mousePos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
     window.addEventListener('mousemove', updateMouse);
 
     let animationId = null;
-    let lastFrameTime = 0;               // match old init
+    let lastFrameTime = 0;
     const fps = 8;
     const frameDuration = 1000 / fps;
     let currentRunningFrameIndex = 0;
 
     const draw = (timestamp) => {
       const canvas = canvasRef.current;
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
-      // Movement & easing (uses Date.now for lastChange)
       const dx = mousePos.current.x - runnerPos.current.x;
       const dy = mousePos.current.y - runnerPos.current.y;
       const distance = Math.hypot(dx, dy);
@@ -52,32 +59,43 @@ export default function SpriteCanvas({
       const vx = dx / magnitude;
       const vy = dy / magnitude;
 
-      const px = lastMouseDelta.current.x;
-      const py = lastMouseDelta.current.y;
-      const dot = vx * px + vy * py;
-      const normalizedAgreement = (dot + 1) / 2;
+      const dot = vx * lastMouseDelta.current.x + vy * lastMouseDelta.current.y;
+      if (dot < 0.8) lastChangeTimestamp.current = Date.now();
 
-      if (dot < 0.8) {
-        lastChangeTimestamp.current = Date.now();
-      }
       const timeSinceStable = Date.now() - lastChangeTimestamp.current;
-      const adjustedAgreement =
-        timeSinceStable >= lockInDelay ? normalizedAgreement : 0;
-
+      const adjustedAgreement = timeSinceStable >= lockInDelay ? (dot + 1) / 2 : 0;
       const ease = minEase + (maxEase - minEase) * adjustedAgreement;
-      lastMouseDelta.current = { x: vx, y: vy };
 
+      lastMouseDelta.current = { x: vx, y: vy };
       runnerPos.current.x += dx * ease;
       runnerPos.current.y += dy * ease;
 
       isMoving.current = distance > idleRadius;
       if (dx !== 0) lastDirection.current = dx > 0 ? 1 : -1;
 
-      // Frame cycling exactly as old
+      // Zone detection in RAF — only fires callback on enter/exit
+      const cw = canvas.width;
+      const ch = canvas.height;
+      let newZone = null;
+      for (const zone of zonesRef.current) {
+        const zx = zone.relativeX * cw;
+        const zy = zone.relativeY * ch;
+        const r = zone.relativeRadius * Math.min(cw, ch);
+        if (Math.hypot(runnerPos.current.x - zx, runnerPos.current.y - zy) < r) {
+          newZone = zone;
+          break;
+        }
+      }
+      const newId = newZone?.id ?? null;
+      if (newId !== activeZoneIdRef.current) {
+        activeZoneIdRef.current = newId;
+        onZoneChangeRef.current?.(newZone);
+      }
+
+      // Frame cycling
       if (timestamp - lastFrameTime > frameDuration) {
         if (isMoving.current) {
-          currentRunningFrameIndex =
-            (currentRunningFrameIndex + 1) % runningFrames.length;
+          currentRunningFrameIndex = (currentRunningFrameIndex + 1) % runningFrames.length;
           frame.current = runningFrames[currentRunningFrameIndex];
         } else {
           frame.current = 0;
@@ -85,21 +103,14 @@ export default function SpriteCanvas({
         lastFrameTime = timestamp;
       }
 
-      if (onPlayerMove) {
-        onPlayerMove({ x: runnerPos.current.x, y: runnerPos.current.y });
-      }
-
-
-      // Draw sprite frame
+      // Draw
       const frameWidth = sprite.current.width / gridCols;
       const frameHeight = sprite.current.height / 3;
       const drawWidth = frameWidth * scale;
       const drawHeight = frameHeight * scale;
-
       const sx = (frame.current % gridCols) * frameWidth;
       const sy = Math.floor(frame.current / gridCols) * frameHeight;
 
-      // Only clear the area where the sprite was previously drawn
       ctx.clearRect(
         runnerPos.current.x - drawWidth,
         runnerPos.current.y - drawHeight,
@@ -111,20 +122,14 @@ export default function SpriteCanvas({
       if (lastDirection.current === -1) {
         ctx.scale(-1, 1);
         ctx.drawImage(
-          sprite.current,
-          sx, sy,
-          frameWidth, frameHeight,
-          -runnerPos.current.x - drawWidth / 2,
-          runnerPos.current.y - drawHeight / 2,
+          sprite.current, sx, sy, frameWidth, frameHeight,
+          -runnerPos.current.x - drawWidth / 2, runnerPos.current.y - drawHeight / 2,
           drawWidth, drawHeight
         );
       } else {
         ctx.drawImage(
-          sprite.current,
-          sx, sy,
-          frameWidth, frameHeight,
-          runnerPos.current.x - drawWidth / 2,
-          runnerPos.current.y - drawHeight / 2,
+          sprite.current, sx, sy, frameWidth, frameHeight,
+          runnerPos.current.x - drawWidth / 2, runnerPos.current.y - drawHeight / 2,
           drawWidth, drawHeight
         );
       }
@@ -133,38 +138,21 @@ export default function SpriteCanvas({
       animationId = requestAnimationFrame(draw);
     };
 
-    const startIfReady = () => {
-      const canvas = canvasRef.current;
-      // match old sizing
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-      if (sprite.current.complete) {
-        requestAnimationFrame(draw);
-      } else {
-        sprite.current.onload = () => {
-          requestAnimationFrame(draw);
-        };
-      }
-    };
-
-    startIfReady();
+    if (sprite.current.complete) {
+      animationId = requestAnimationFrame(draw);
+    } else {
+      sprite.current.onload = () => { animationId = requestAnimationFrame(draw); };
+    }
 
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('mousemove', updateMouse);
     };
-  }, [
-    spriteImage,
-    idleRadius,
-    scale,
-    runningFrames,
-    gridCols,
-    maxEase,
-    minEase,
-    lockInDelay,
-    onPlayerMove,
-  ]);
+  }, [spriteImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay]);
 
   return (
     <canvas

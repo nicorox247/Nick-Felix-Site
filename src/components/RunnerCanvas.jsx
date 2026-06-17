@@ -5,7 +5,8 @@ export default function RunnerCanvas({
   spriteImage,
   backgroundImage,
   rotateDeg,
-  onPlayerMove,
+  zones,
+  onZoneChange,
   onCanvasResize,
 }) {
   return (
@@ -17,7 +18,8 @@ export default function RunnerCanvas({
       />
       <SpriteCanvas
         spriteImage={spriteImage}
-        onPlayerMove={onPlayerMove}
+        zones={zones}
+        onZoneChange={onZoneChange}
       />
     </>
   );
