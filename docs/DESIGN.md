@@ -76,7 +76,30 @@ Two alternate palettes are saved as comments in `App.css` — a Columbia Blue sc
 
 ---
 
-## Homepage Canvas (Paused)
+## Homepage Canvas (Active)
+
+### Sprite Movement System (`SpriteCanvas.jsx`)
+
+Mouse-follow with exponential easing + departure delay. Tuned params:
+
+| Param | Value | Role |
+|---|---|---|
+| `ease` | via `maxEase/minEase` | Fraction of gap closed per frame — fast when far, slows as it closes |
+| `maxEase` | `0.005` | Speed ceiling |
+| `minEase` | `0.001` | Speed floor (keeps ease from bottoming out to zero) |
+| `lockInDelay` | `600ms` | How long direction must be stable before ease ramps to maxEase |
+| `idleRadius` | `30px` | Sprite snaps to rest when within this distance of mouse |
+| `departureDelay` | `600ms` | After arriving, sprite holds position this long before chasing again — gives mouse a head start so easing is meaningful |
+
+**Why departure delay:** Without it, the sprite catches up to the mouse and then immediately re-engages at near-zero distance, making the easing invisible and movement feel 1-to-1.
+
+**Critical bug fixed:** `runningFrames` and `zones` default prop values were inline array literals (`= [1,2,3,4]`), creating new references every render. This caused the RAF loop to restart on every zone enter/exit (which triggers a re-render via `activeZone` state in Homepage). On restart, stale refs caused `ease` to jump straight to `maxEase` — felt like the sprite "skyrocketed." Fix: move defaults outside the component as module-level constants.
+
+**Zone detection** is done inside the RAF loop via refs — `onZoneChange` only fires on enter/exit, not every frame. Eliminates 60 React state updates per second.
+
+---
+
+## Homepage Canvas (Architecture)
 
 - Pixel-art athlete on a courtyard tilemap background (`courtyardTile.png`)
 - Mouse-following movement via `RunnerCanvas`

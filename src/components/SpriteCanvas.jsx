@@ -1,15 +1,19 @@
 import { useRef, useEffect } from 'react';
 
+const DEFAULT_RUNNING_FRAMES = [1, 2, 3, 4];
+const DEFAULT_ZONES = [];
+
 export default function SpriteCanvas({
   spriteImage,
-  zones = [],
-  idleRadius = 80,
+  zones = DEFAULT_ZONES,
+  idleRadius = 30,
   scale = 1.7,
-  runningFrames = [1, 2, 3, 4],
+  runningFrames = DEFAULT_RUNNING_FRAMES,
   gridCols = 2,
   maxEase = 0.01,
-  minEase = 0.0001,
+  minEase = 0.001,
   lockInDelay = 600,
+  departureDelay = 600,
   onZoneChange,
 }) {
   const canvasRef = useRef(null);
@@ -22,6 +26,8 @@ export default function SpriteCanvas({
   const lastDirection = useRef(1);
   const lastMouseDelta = useRef({ x: 0, y: 0 });
   const lastChangeTimestamp = useRef(Date.now());
+  const atRest = useRef(false);
+  const departureTimer = useRef(null);
 
   // Keep zones and callback in refs so the RAF loop never needs to restart
   const zonesRef = useRef(zones);
@@ -58,6 +64,22 @@ export default function SpriteCanvas({
       const magnitude = distance || 1;
       const vx = dx / magnitude;
       const vy = dy / magnitude;
+
+      // Departure delay — hold position after arriving until mouse gets far enough away
+      if (distance <= idleRadius) {
+        atRest.current = true;
+        departureTimer.current = null;
+      } else if (atRest.current) {
+        if (departureTimer.current === null) departureTimer.current = Date.now();
+        if (Date.now() - departureTimer.current < departureDelay) {
+          isMoving.current = false;
+          animationId = requestAnimationFrame(draw);
+          return;
+        }
+        atRest.current = false;
+        departureTimer.current = null;
+        lastChangeTimestamp.current = Date.now(); // reset lockIn so it ramps up fresh
+      }
 
       const dot = vx * lastMouseDelta.current.x + vy * lastMouseDelta.current.y;
       if (dot < 0.8) lastChangeTimestamp.current = Date.now();
@@ -152,7 +174,7 @@ export default function SpriteCanvas({
       cancelAnimationFrame(animationId);
       window.removeEventListener('mousemove', updateMouse);
     };
-  }, [spriteImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay]);
+  }, [spriteImage, idleRadius, scale, runningFrames, gridCols, maxEase, minEase, lockInDelay, departureDelay]);
 
   return (
     <canvas
