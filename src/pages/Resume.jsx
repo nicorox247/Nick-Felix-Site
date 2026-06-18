@@ -22,7 +22,7 @@ export default function Resume() {
     let initialScale;
   
     if (width >= 1280) {
-      initialScale = 2;
+      initialScale = 1.6;
     } else if (width >= 1024) {
       initialScale = 1.6;
     } else if (width >= 768) {

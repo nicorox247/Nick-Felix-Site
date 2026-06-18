@@ -1,0 +1,555 @@
+Transferring Atomic Arbitrage Principles to Multi-chain
+Arbitrage Path Discovery and Execution
+Roberto Brera Nick Felix Taejun Seo
+May 10, 2025
+Abstract
+Price discovery in the Decentralized Finance (DeFi) ecosystem relies on effective
+arbitrage activity vis-a-vis an arbitrary number of assets (tokens) hosted across mul-
+tiple chains. The proliferation of Layer-2 protocols (chains) have added much more
+complexity to arbitrage activity, often resulting in wide dissonance in the exchange
+rates of some esoteric token pairs hosted across multiple chains. This study makes
+two major contributions to the body of research in multi-chain arbitrage. First, we
+present a practical framework for implementing theoretical guidance on optimizing
+complex atomic arbitrage. Second, we make practical recommendations for extending
+the implementation framework to the multi-chain arbitrage context.
+1 Introduction
+Like in traditional finance, price discovery in decentralized finance relies on arbitrageurs
+effectively acting upon price discrepancies of an arbitrary number of asset pairs across
+multiple exchanges. Increasing trading volumes on decentralized exchanges (DEX) hosted
+on Layer 2 (L2) rollups have, in many cases, exacerbated price fragmentation and present
+new opportunities for cross-chain arbitrage between rollups or between rollups and a L1
+centralized exchange (CEX).
+Given the computational complexity of finding profitable arbitrage opportunities across
+a potential vast search space, previous works have emphasized careful algorithmic imple-
+mentations. Wang et al. (2022) first introduced the concept of cyclic arbitrage opportunities
+in the blockchain, although their implementation only went so far as to traverse triangular
+cyclic arbitrage opportunities containing ETH. McLaughlin, Kruegel, and Vigna (2023) in-
+troduced more algorithmic sophistication by applying cycle detection algorithms to search
+for profitable cyclic arbitrage opportunities.
+Subsequently, the Moore-Bellman-Ford (MBF) algorithm (and its variations) has emerged
+as the preferred algorithmic foundation for finding arbitrage opportunities. To our knowl-
+1
+edge, Zhou et al. (2021) was the first to apply the MBF combined algorithm to find arbitrage
+loops. However, subsequent work found that the MBF algorithm was significantly limited:
+it is able to recognize only a limited number of arbitrage opportunities, cannot specify the
+starting token of the detected arbitrage loops, and is unable to detect non-loop arbitrage
+paths between an arbitrage pair of tokens. In response, Zhang, Yan, et al. (2024) presents
+a modified methodology based on a modified MBF algorithm (MMBF) that uses a “line
+graph” with pairs of tokens as vertices in conjunction with the traditionally formulated
+graph consisting of tokens as its vertices. With some additional minor modifications, the
+methodology of Zhang, Yan, et al. (2024) is shown to be superior to prior formulations of
+the detection of MBF-based arbitrage opportunities.
+However, we identify and resolve several important gaps in the literature. First, the
+aforementioned detection algorithms have been mostly presented from a purely theoretical
+standpoint, and previous works have provided little practical guidance on how to integrate
+them within a broader framework that accounts for the architecture-specific aspects of the
+blockchains we want to arbitrage. We address this gap by providing practical guidance
+on how to embed this promising theoretical foundation within a multithreaded system for
+detecting and executing atomic arbitrage trades in the single-chain setting.
+In particular, we provide an end-to-end systems implementation that consists of four
+main modules: an online listener that maintains an updated blockchain state, an offline
+data processing unit that refines the state into an efficiently-processable graph, an offline
+solver that runs the main detection algorithms, and finally an online module for broadcast-
+ing the output transactions and handling the gas-bidding process. This modularization
+will provide a concrete roadmap for developing and iteratively improving an arbitrage-
+exploiting system.
+Second, previous works’ theoretical articulation and empirical demonstration of the
+aforementioned detection algorithms have been restricted to the single-chain environment.
+In response, we formulate a theoretical framework for applying the core principles found in
+single-chain algorithms to a multi-chain context. This will allow the system in the previous
+part to be extended for the more complex multi-chain arbitrage environment, potentially
+enabling the exploitation of more profitable opportunities.
+2 Theoretical Background
+In the following, we summarize the most salient findings and methodologies of previous
+work concerning the detection of arbitrage opportunities in the Web3/blockchain context.
+We highlight a theoretical framework for evaluating arbitrage strategies, summarize the
+major classical and frontier algorithms for detecting and evaluating opportunities, and
+illustrate a closed-form mathematical model for optimizing trade size for a given arbitrage
+opportunity.
+2
+2.1 Single-Chain Atomic Arbitrage in DeFi
+Atomic arbitrage refers to the execution of a series of trades within a single blockchain
+transaction to exploit price discrepancies between decentralized exchanges (DEX). The
+typical sequence consists of the acquisition of capital, the execution of cyclical trades,
+and the repayment of loans. The atomicity of the single-transaction strategy enables arbi-
+trageurs to leverage flash loans – uncollateralized loans that must be repaid within the same
+transaction. Assuming a well-designed execution code, all legs should settle atomically (or
+else revert entirely), thereby allowing the arbitrageur to capture the price discrepancy
+within that block, with the potential downside capped by the maximum expendable gas
+fees. Thus, these flash loans should virtually carry no default risk or exposure to interim
+price risk.
+Prior research on single-chain DEX markets (e.g. Uniswap or Curve on Ethereum)
+shows that such atomic arbitrage opportunities arise when exchange rates across pools
+¨
+diverge and arbitrageurs quickly eliminate these inefficiencies (
+Oz et al. 2025). A classic
+example is a triangular swap: an arbitrageur borrows assets (via a flash loan), then trades
+through a cycle of pools (e.g., Token A → Token B → Token C → back to Token A) such
+that the starting asset quantity increases by the end of the cycle. These strategies are
+highly competitive; low barriers to entry (no capital requirement due to flash loans) lead
+to thin margins and intense bidding wars in transaction fee markets. This will later serve as
+the main motivation for extending these strategies to the less tractable multi-chain setting.
+2.2 Graph-Based Cycle Detection and Bellman-Ford
+To systematically discover single-chain arbitrage, researchers and practitioners model the
+DEX ecosystem as a directed weighted graph, where vertices represent tokens and directed
+edges represent swap trades in a specific pool. Specifically, we model the DEX ecosystem
+as a directed graph G= (V,E) where:
+• Each vertex Ti ∈V represents a token,
+• Each directed edge (i→j) ∈E encodes the net exchange rate:
+units of Tj received
+Ri→j=
+units of Ti swapped (net of fees and slippage),
+In order to be able to later apply the Bellman-Ford negative-cycle-detection algorithm
+on the graph, we transform to negative additive weights via the trick
+wi→j=−ln Ri→j
+Given the graph graph G= (V,E) defined above, a cycle
+C : Ti0 →Ti1 →···→Tik−1 →Tik
+= Ti0
+3
+is profitable exactly when
+k−1
+m=0
+Rim→im+1 >1. Equivalently, one shows:
+k−1
+m=0
+Rim→im+1 >1 ⇐⇒
+k−1
+m=0
+ln Rim→im+1 >0 (1)
+⇐⇒
+⇐⇒
+k−1
+m=0
+−ln Rim→im+1 <0 (2)
+k−1
+wim→im+1 <0 (3)
+m=0
+Thus, detecting any negative-weight cycle in G(with w=−ln R) is exactly the same as
+finding a profitable cyclic arbitrage. The former is a well-known problem in graph theory
+and algorithms.
+The classical solution is to run the Bellman–Ford shortest path algorithm (or a similar
+negative-cycle detection method) on this graph. By introducing a fictitious super-source
+vertex connected to all tokens with 0-weight edges, one can ensure any negative cycle
+is reachable from the source. After the usual |V|−1 relaxation rounds, an additional
+relaxation that still yields improvement signals a reachable negative cycle (i.e., an arbitrage
+loop). In practice, Bellman–Ford can successfully identify at least one cycle where the
+product of exchange rates exceeds 1, corresponding to a profitable arbitrage opportunity.
+This approach (sometimes called the Bellman-Ford or BF arbitrage detector) became a
+standard starting point for on-chain arbitrage bots and academic studies of DEX pricing.
+4
+The below graph illustrates an example arbitrage path that traverses 3 of 4 tokens
+represented in the global state. Note that the arbitrage path will not necessarily traverse
+all 4 tokens shown if it is not profitable.
+Figure 1: Generalized Bellman–Ford arbitrage detection. The solid arrows denote the
+main profitable cycle T1 →T2 →T3 →T1, while the dotted arrows indicate other available
+(non-arb) swap directions and the additional token T4 connected only by non-cycle edges.
+Each directed edge weight is defined by wi→j=−ln Ri→j.
+However, a na¨ıve out-of-the-box Bellman–Ford implementation has significant limita-
+tions in the fast-paced DeFi context. First, the standard algorithm terminates as soon
+as it finds any negative cycle, often returning an arbitrary cycle without regard to its ex-
+pected profit. Specifically, the standard form of the algorithm has no built-in mechanism
+to maximize for the magnitude of the negative cycles it detects. In a large token graph,
+there may be dozens of concurrent arbitrage loops per block; a vanilla BF might stop at a
+trivial low-profit cycle while missing a far more lucrative opportunity.
+Second, the input graph that Bellman-Ford receives, as constructed above, contains only
+partial costs, as it does not account for the gas fees incurred by the execution of longer
+cycles. This implies an edge-case cycle with a tiny percentage gain could be flagged even
+if, in absolute terms, it yields a negligible profit, or even a loss once gas is paid (McKinnon
+2022). Thus, longer cycles will need to be penalized. Some candidate strategies include
+baking in the estimated gas fees directly in the weight metrics, bounding the maximum
+acceptable length for a cycle, or simply simulating execution of candidate cycles directly
+in the local EVM in order to discern the profitable ones from the non-profitable.
+Third, out-of-the-box BF does not enumerate all cycles – it simply detects the existence
+of at least one arbitrage loop. One tangible, but potentially inefficient, solution is to
+recursively remove an edge representing the detected cycle and run the BF again, thereby
+enumerating all cycles one by one (McKinnon 2022; DeFigueiredo 2022).
+5
+Fourth, BF is inherently inefficient, as it runs |V|−1 consecutive rounds of relaxations.
+These operations are hard to parallelize, imposing a severe limitation on the size of the
+graphs that the algorithm would be able to process within the highly restricted block times
+(Layer 2 blocks can last for as little as two seconds).
+In the following sections, we address these limitations by proposing tangible mitigation
+strategies.
+2.3 Multi-Chain Arbitrage and Cross-Chain Strategies
+As DeFi expanded beyond a single blockchain, arbitrage opportunities emerged across mul-
+tiple chains (e.g., Ethereum, BSC, Polygon), where the same asset can trade at different
+prices on different networks. Cross-chain arbitrage exploits these inter-chain price discrep-
+ancies, but it introduces fundamental challenges absent in single-chain atomic scenarios.
+2.3.1 Non-atomicity in multi-chain arbitrage
+In particular, trades spanning distinct blockchains cannot be executed atomically within
+one transaction. Any cross-chain arbitrage must occur via separate transactions on each
+chain, often with a bridge transfer of assets in between – making it a non-atomic arbitrage
+¨
+susceptible to intermediate price movements and execution risk (
+Oz et al. 2025). This non-
+atomicity means that arbitrageurs face asynchronous execution: one leg of the arbitrage
+might be executed on one chain while the other leg is still pending (or the asset is in transit
+across a bridge). If prices shift unfavorably during that delay, the overall trade can fail or
+even incur losses.
+Despite these risks, the fragmentation of liquidity across chains ensures that significant
+¨
+cross-chain price spreads do occur (
+Oz et al. 2025). Recent empirical studies have docu-
+¨
+mented substantial cross-chain arbitrage activity. For example,
+Oz et al. (2025) identify
+over 260,000 cross-chain arbitrage transactions in a year across nine major blockchains.
+These arbitrages generated at least $9.5 million in total profit and often involved trading
+popular assets like WETH and USDC on Layer-2 networks vs. Ethereum mainnet. The
+observed cross-chain arbitrages can be categorized into two strategic paradigms: Sequence-
+¨
+Independent Arbitrage (SIA) and Sequence-Dependent Arbitrage (SDA) (
+Oz et al. 2025).
+2.3.2 Sequence-Independent Cross-Chain Arbitrage (SIA)
+In Sequence-Independent cross-chain arbitrage (SIA), an arbitrageur executes independent,
+opposite-direction trades on different chains without relying on any cross-chain transfer dur-
+¨
+ing the arbitrage (
+Oz et al. 2025). Essentially, the arbitrageur maintains float (inventory)
+of the relevant assets on each chain beforehand. When a price discrepancy arises (e.g., an
+asset is cheaper on Chain A than on Chain B), they buy on the underpriced chain and si-
+multaneously sell on the overpriced chain, using their pre-positioned liquidity on both sides
+6
+¨
+(
+Oz et al. 2025). Because each trade is confined to its own chain’s block, no inter-chain
+messaging or waiting is required at execution time. Hence, the crucial advantage of this
+setup is that the transactions can occur in synchrony – up to the block-time discrepancies
+of the blockchains – and thus more closely emulate the atomic case.
+Figure 2: Sequence-Independent Cross-Chain Arbitrage (SIA). In a low-liquidity L2 pool
+(Chain A), an arbitrageur trades 1 ABC →1 XYZ at price αthen on Chain B immediately
+swaps 1 XYZ → (α+ γ) ABC. Independently executed, this yields net profit γ. Figure by
+¨
+Oz et al. (2025)
+.
+This independence avoids bridge delays entirely since there is no need for bridging at
+all, greatly reducing exposure to price slippage due to timing. For instance, if 1 WETH is
+trading for 1000 USDC on a Layer-2 exchange while on Ethereum mainnet it trades for 1100
+USDC, a SIA strategy might use 1000 USDC on the L2 to buy 1 WETH and simultaneously
+use 1 WETH on mainnet to sell for 1100 USDC. The net profit ( 100 USDC) is realized
+once the arbitrageur eventually rebalances their inventories (e.g., periodically bridging some
+profit to restore balances). The key advantage is thus the removal of bridge risk during
+the arbitrage, which otherwise could “defeat the purpose of arbitrage” by turning it into a
+speculative bet on future prices.
+However, the trade-off is that SIA requires significant capital to be fragmented across
+all chains and assets involved. In practice, maintaining liquidity in every token on every
+chain is infeasible beyond a small subset; for instance, an arbitrage spanning 9 chains and
+10 tokens would demand maintaining up to 90 separate liquidity positions. Thus, as a more
+practical compromise, arbitrageurs can employ collateralized cross-chain loans: rather than
+pre-funding every token, they hold a large stash of collateral (e.g. a stablecoin or ETH)
+on each chain and quickly borrow the specific asset needed for a given trade from a local
+money market. Thus, each chain requires just one pool of high-value collateral to tap
+into, and does not need to maintain a full inventory of all tradable assets. However, the
+arrangement still incurs overhead and complexity in loan management.
+In the upcoming sections, we will propose a theoretical framework for handling this
+complex borrowing scheme and bridging collateral pools across chains. The goal will be to
+emulate the atomic case, modeling the exchange-rates offered across multiple chains in a
+7
+single general graph, to then delegate cross-chain liquidity provision and loan management
+to a specialized subroutine.
+2.3.3 Sequence-Dependent Cross-Chain Arbitrage (SDA)
+By contrast, Sequence-Dependent cross-chain arbitrage (SDA) uses bridge contracts or
+¨
+cross-chain swaps as part of the transaction sequence (
+Oz et al. 2025). In SDA, the legs of
+the arbitrage are executed in a dependent order: the output (profit) from the first trade
+¨
+(on Chain A) is transferred to Chain B via a bridge to fund the second trade (
+Oz et al.
+2025). This strategy minimizes initial capital needs, because the trader can start with
+funds on only one chain and move value to the other as needed, rather than holding assets
+on both. 1
+The drawback is the latency and risk introduced by the bridge step: between the
+L2 purchase and the mainnet sale, the market could move or another arbitrageur could
+correct the price discrepancy. Empirically, SDA trades are indeed riskier and sometimes
+¨
+fail (e.g., if the price gap closes while funds are en route).
+Oz et al. (2025) observe that only
+about one-third of the cross-chain arbitrages detected in their data set involved bridging,
+indicating that many arbitrageurs prefer the safer SIA approach despite its higher capital
+requirement.
+In practice, the SIA strategy is significantly more prevalent, with much of 67.63% of
+cross-chain arbitrage not using a bridge . The prevalence of SIA over SDA can be attributed
+to the time-sensitive nature of arbitrage strategies — waiting for funds to be transferred
+over bridges could render arbitrage opportunities unprofitable. Therefore, in our work
+we choose to build on the SIA approach as we believe that liquidity provision is a more
+correctable pitfall than potentially unpredictable price slippages.
+2.4 CFMM Closed-Form Solution
+In our graph-modeling approach, we compute the exchange rates between some arbitrary
+tokens X,Y by simply taking the relative ratio y
+x of their respective reserves (x,y). This
+is known as the mid-price and is a perfectly reasonable assumption to make in the context
+of detecting potentially profitable arbitrage cycles. However, when we would then actually
+trade the tokens, the effective price we get is crucially dependent on trade size, especially
+when the trade size is large compared to the reserves.
+Therefore, in this section we show the derivation for a convenient closed-form formula
+to optimize the trade size of an arbitrary cycle.
+1Using the earlier example, an SDA execution might begin by buying 1 WETH on the cheaper L2
+(spending 1000 USDC), then bridging that WETH to Ethereum mainnet, and finally selling it for 1100
+USDC on mainnet. The outcome (1100 USDC on mainnet, 1000 USDC spent on L2) is the same net profit
+of 100 USDC, but it is achieved with capital initially only on the L2 side.
+8
+,
+In a constant-product CFMM (e.g., Uniswap-style pool), ignoring fees for simplicity,
+the output ∆y from input ∆x follows a concave curve
+∆y= y−
+xy
+x+ ∆x
+so the effective price ∆y/∆x depends on ∆x itself, especially when ∆x is large relative to
+the reserves (x,y). Thus, once we identify a cycle
+T0 → T1 → ··· → T0,
+we must also solve a concave optimization problem—maximizing the composite rational
+function given by chaining each pool’s ∆x →∆y mapping and subtracting gas costs—to
+find the true profit-maximizing order size.
+A straightforward practical approach is to run a binary search on ∆xfor each candidate
+cycle: for each trial size, simulate the full loop, subtract estimated gas, and converge in
+∼10 iterations to within a tight tolerance. In production this meant performing ≈100
+such CFMM evaluations per block (hundreds of milliseconds even on parallel hardware).
+Ultimately, however, deriving and implementing the closed-form solution for the optimal
+∆x in a concatenated CFMM chain proved far more efficient, eliminating the per-block
+binary-search overhead. Consider the following derivation of the closed-form solution by
+Lipton and L´opez de Prado (2020).
+We consider a constant-product automated market maker (CFMM) with reserves (R1,R2)
+for token pair (t1,t2) and trading fee parameter 0 < γ ≤1 (so the trader pays an effec-
+tive fee fraction 1−γ). We derive the output function, marginal price, and the optimal
+arbitrage order size for general cyclic paths.
+2.4.1 Single Pair Trade
+First, consider a single-pair trade. Inputting a quantity ∆1 >0 of token t1 to the CFMM
+yields:
+∆2(∆1; R1,R2) = γR2 ∆1
+R1 + γ∆1
+. (4)
+The corresponding marginal price of t2 in units of t1 after supplying ∆1 is
+d∆2
+=
+γR1 R2
+2. (5)
+R1 + γ∆1
+2.4.2 Extension to Arbitrary Multi-Hop Paths
+Next, consider an arbitrary multi-hop path consisting of n successive CFMMs trading
+t1 →t2 →···→tn with reserves Ri,i+1 on each hop (ti,ti+1). Let ∆1 be the input on the
+9
+d∆1
+first market, and define ∆k to be the output of the k-th hop. One shows by induction that
+∆n(∆1; R) = ∆1 γn n−1
+i=1 Ri,i+1
+n−1
+Ri+1,i + ∆1
+n
+γi
+i−1
+i=1
+i=1
+j=1
+, (6)
+Rj,j+1
+n
+j=i+1
+Rj,j−1
+, (9)
+and its marginal price is
+d∆n
+γn n−1
+=
+i=1 Ri,i+1Ri+1,i
+2. (7)
+d∆1
+n−1
+i=1 Ri+1,i + ∆1
+n
+i=1 γi( i−1
+j=1 Rj,j+1)(n
+j=i+1 Rj,j−1)
+2.4.3 Optimal Arbitrage Quantity
+For a cyclic arbitrage path t1 →t2 →···→tn →t1, the net profit when inputting ∆1 of
+t1 is
+Π(∆1) = ∆n+1(∆1; R)−∆1 , (8)
+where ∆n+1 denotes the final output back in token t1. Maximizing Π(∆1) yields the
+closed-form optimal input:
+∆∗
+1 =
+γn n
+i=1 Ri,i+1 Ri+1,i−
+n
+i=1 Ri,i+1
+n
+γi
+i−1
+Rj,j+1
+n
+Rj+1,j
+i=1
+j=1
+j=i+1
+which simplifies the brute-force (binary–search) approach and runs in closed form.
+3 Methodology
+As previously discussed in section 2, while the Bellman–Ford approach forms the fun-
+damental building block for arbitrage detection, it must be adapted to DeFi’s real-time
+requirements. Specifically, we seek to design an algorithm that: (1) in general, balances a)
+thoroughness (finding as many profitable cycles as possible) with b) speed and practicality
+in a real-time trading environment; and (2) is extendable to a multi-chain environment.
+The literature suggests a spectrum of optimizations for pure BF-based negative cycle
+search, such as improved multi-cycle enumeration and ranking methods (Zhang, Li, et
+al. 2024), to algorithmic innovations that broaden the search space while managing com-
+plexity (pruning by liquidity/length, specialized graph transformations, and profit-driven
+objective functions). Here, we provide a framework for designing and evaluating potential
+implementation choices for multi-chain arbitrage.
+10
+3.1 Design Requirements
+We formulate the following principles in considering our implementation, organized by
+descending level of importance. Moreover, we explain how we have addressed each one of
+thee requirements in our implementation, and how previous work has dealt with them.
+Requirement 1 (Time Complexity). The algorithm must find profitable arbitrage
+paths, if any, as quickly as possible within a strict upper bound of the block time of the
+blockchain.
+The algorithm runtime is subject to a strict upper bound equal to the block time of
+the native blockchain (e.g., 12 seconds in Ethereum). Should it fail to produce a profitable
+arbitrage path within this bound, and the blockchain state is updated to reflect the next
+block, the strategy practically becomes obsolete as exchange rates would have moved sig-
+nificantly. In practice, satisfying this requirement would necessitate limiting the number of
+edges that the algorithm would have to traverse in the graph, as the algorithm primarily
+executes edgewise iterations. We suggest two realistic strategies for achieving a practical
+runtime.
+First, it is crucial to minimize the data load that has to be processed by the cycle-
+detection algorithm at the source, by enforcing strict filters on the liquidity pools and
+DEXes that are gathered during the first screening phase. In our implementation, we
+have set minimum limits on the reserve size in ETH of each liquidity pool, since too-small
+liquidity pools are practically impossible to arbitrage at sufficiently large trade sizes as a
+consequence of the CFMM explained previously. Additionally, we could iteratively update
+a blacklist of ”dead tokens” that are not arbitrageable due to their contracts having become
+inactive.
+Second, we can prune the graph. For example, since the logical place to start the exper-
+iment is Uniswap V2 – possibly the most canonical DEX architecture – and most crucially
+this architecture enforces unique liquidity pools between any token pair, we already know
+upfront that only one single exchange rate will be offered for each edge. Because we always
+trade at a fee, an immediate consequence of this is the fact that 2-token cycles will never
+be profitable, which in turn allows us to prune from the graph any node whose outdegree
+is strictly less than 2 without impacting the overall arbitrage opportunities.
+It is worth emphasizing that these data preprocessing procedures alone are largely
+responsible for increasing the efficiency of the overall system without even touching the
+implementation of Bellman-Ford. In our case, for example, they have brought down the
+value of the different tokens/nodes nfrom roughly 400,000 to under 5,000, with substantial
+implications for performance.
+As a consequence of the nature of the problem, and our strict data screening process,
+11
+the graph will be sparse, thus presenting a low ratio of number of edges to the number
+of vertices, or ev ratio= |E|: |V|, which will help the efficiency of the cycle-detection
+algorithm.
+In practice, we expect there to be a set of ”critical vertices”, denoted M where M ⊂V,
+that represent the highly liquid tokens that form of the bedrock of the DeFi ecosystem.
+These vertices should have a very high in/out degree of approximately |V|each, as each of
+these foundational tokens should be convertible to almost any other token. We anticipate
+that these critical vertices should represent assets such as BTC, ETH, SOL, USDC, and
+a few others. On the other hand, the remaining O= V−M, where O ⊂V vertices
+would represent ”obscure” tokens, characterized by limited exchange liquidity vis-a-vis
+other tokens represented in O. Thus, these tokens would mostly only be exchangeable for
+tokens represented in M. Consequently, we should expect verticies in O to have in/out
+degrees of approximately |M|.
+Third, we enforce a hard cap on cycle length to deter overly long arbitrage paths that
+would be both computationally expensive to execute (thereby incurring more gas fees) and
+would be unlikely to be found in a reasonable amount of time (because of the combinatorial
+explosions in the search space). To enforce this cap, we simply limit the number of Bell-
+man–Ford relaxations to some fixed integer k<|V|. After the k-th relaxation, no further
+distance updates are considered, ensuring that the algorithm only detects only cycles of
+at most k edges. This is a significant improvement to Bellman-Ford as it limits the total
+number of relaxations from |V|−1 to a mere fraction of that amount.
+In fact, empirical studies of DEX arbitrage find that most profitable opportunities in-
+volve only a few hops (2–4 trades) due to gas costs and slippage increasing with longer
+paths. Thus, many arbitrage bots restrict attention to short cycles (triangular or quadri-
+lateral loops at most) and ignore longer paths beyond a certain length bound. This dra-
+matically limits the number of cycles to consider. For example, McKinnon (2022) reports
+pruning his Avalanche C-Chain arbitrage graph by filtering out low-liquidity or inactive
+pools, and then only searching cycles of length 4 or shorter, which were sorted by historical
+profit potential. By focusing on a small subset of likely profitable cycles, their system
+reduced detection time from hundreds of milliseconds to tens of milliseconds per block.
+Another line of work separates the problem into two phases: enumeration of candidate
+cycles followed by runtime evaluation. By using Johnson’s cycle-finding algorithm (Johnson
+1975) to enumerate all simple cycles in the trading graph, one can pre-compute the cycle
+topology off-chain (assuming a relatively static pool graph). At runtime, the weight of
+each cycle (product of current exchange rates) is then calculated to check for negativity,
+and cycles can be ranked according to estimated profit. This cycle-enumeration approach,
+while potentially expensive, becomes practical if the graph structure is relatively static
+(tokens/pools don’t change often). It enables exhaustive discovery of arbitrage loops and
+identification of the top-profit opportunity at the cost of heavy pre-processing.
+12
+While we did not implement this approach in the specifics, we have inherited from it
+the spirit of runtime evaluation. After computing any candidate cycle, we leveraged the
+local EVM execution of the Uniswap V2 router contract to run locally the exact same code
+that would run on the EVM, and thus to verify the profitablity of each single candidate
+cycle (excluding the trading fees).
+Finally, it is crucial to emphasize in this closing part that the screening and graph
+construction phase cannot and should not be repeated at every new block. Successful
+implementations monitor only a subgraph of pools that have changed in the latest block,
+re-running the cycle detection on that subgraph or updating distances incrementally, rather
+than recomputing on the entire graph each time. In our case, it took roughly 20 minutes
+to construct the whole up-to-date graph of the Uniswap V2 DEX, and hence this would be
+impractical to re-execute at every single new block.
+Requirement 2 (Detection of an arbitrary number arbitrage opportunities).
+The algorithm must be able to find an arbitrary number of negative cycles dynamically.
+Second, the algorithm must be able to find an arbitrary number of negative cycles
+dynamically. Unlike the ”lazy” version of the algorithm that terminates after identifying
+any negative cycle, we seek to design an algorithm that continues to search for more optimal
+negative cycles so long as the block timestep remains the same. Ideally, the algorithm would
+return all possible fee-aware candidates for arbitrage paths, which can then be processed
+by a separate gas-bidding algorithm, which we define below.
+There are two pragmatic approaches to returning more than one negative-cycle arbitrage
+in a token-swap graph. The first is a delete-and-rerun strategy, as suggested by McKinnon
+(2022): after Bellman–Ford returns a cycle C, remove one arbitrarily chosen edge from C
+and rerun the algorithm on the reduced graph. Repeating this N times yields N cycles
+that must each differ by at least one edge. This runs in O N ·|V|·|E|, is relatively trivial
+to implement, and guarantees diversity. This heuristic does not guarantee finding the most
+profitable cycles as it risks missing some more profitable loops, but in practice it has shown
+to be able to enumerate more profitable candidates than what might be expected from a
+’lazy’ BF run.
+The second is an enumerate-and-filter approach, which incorporates cycle-ranking heuris-
+tics into the search. For instance, rather than picking a random edge to remove in each
+iteration, one might preferentially remove the least profitable edge or otherwise bias the
+search so that larger negative-weight (higher profit) cycles surface early. Still, as the num-
+ber of tokens and pools grows, the potential cycles grow combinatorially, making exhaustive
+search infeasible.
+A more generic approach may be to recast the search as an optimization problem: for
+example, Angeris et al. (2021) show that finding an arbitrage in a network of CFMM
+13
+(AMM) pools can be cast as a convex feasibility problem (or a mixed-integer convex pro-
+gram when including fixed gas costs), essentially checking if a profitable routing exists
+(Angeris et al. 2021). Their formulation includes arbitrage detection as a special case of
+an optimal trade routing problem, indicating an arbitrage loop is present if and only if the
+optimal solution yields more value than one’s starting assets (Angeris et al. 2021).
+Given that in our case we were operating on the simpler Uniswap V2, and had done
+extensive data preprocessing, we could afford to go by the first simpler approach proposed
+by McKinnon which still ran in reasonable time.
+Requirement 3 (Maximization of the negative sum of the arbitrage cycle). We
+seek to maximize the negative sum of the arbitrage cycle. Our cycle-detection algorithm
+should seek to surface as consistently as possible the highest-margin arbitrage opportuni-
+ties after accounting for gas costs.
+Finding the single most profitable cycle corresponds to solving the longest simple nega-
+tive cycle problem, which is NP-hard in general (Angeris et al. 2021). DeFigueiredo (2022)
+highlights that standard shortest-path algorithms will detect a negative cycle but not nec-
+essarily the best one, and notes that identifying the globally optimal arbitrage loop would
+require solving a difficult combinatorial problem.
+Thus, for the purpose of this paper, we seek to fulfill this requirement by ensuring that
+the graph remains always small enough to allow for the efficient enumeration of all negative
+cycles.
+Requirement 4 (Execution for Profit-Maximization). The algorithm must solve
+the concave optimization problem with minimal computational overhead.
+The requirements listed above will enable the algorithm to reliably return a near-optimal
+negative-weight cycle / arbitrage path in the token-swap graph. However, the algorithm
+must also be able to determine how much of each token to trade to achieve near-optimal
+profits. The CFMM closed form solution from section 2.4 can be leveraged to fulfill this
+requirement. However, for our trades we anticipate the liquidity pool reserves to be large
+enough compared to our trade size in most of the cases, implying that we will not need to
+worry about trade size.
+3.2 Algorithm Design
+Given the above requirements, we design an end-to-end algorithm that consists of four
+main modules:
+14
+1. An online listener that maintains an updated state for the liquidity pool pairs for the
+DEX(es) being monitored.
+2. An offline data processing unit that filters the liquidity pool pairs, and maintains an
+up-to-date pruned graph.
+3. An offline solver that takes the pruned graph as input and runs the Bellman-Ford
+algorithm with the modifications described above to detect candidate arbitrage loops;
+A liquidity provision module that wraps cycles into transactions handling the loan
+procedure
+4. An online module for broadcasting the transactions (possibly to the Flashbots system)
+and eventually handling the gas-bidding process.

@@ -60,7 +60,7 @@
 }
 
 @utility pdf-preview{
-  @apply shadow-2xl border rounded-xl overflow-y-scroll max-h-[78vh] w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-7xl bg-gradient-highlight text-light;
+  @apply shadow-2xl border rounded-xl overflow-y-scroll max-h-[78vh] w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-5xl bg-gradient-highlight text-light;
   /* ref={previewRef}; */
 
 }

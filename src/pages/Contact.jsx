@@ -80,12 +80,12 @@ export default function Contact() {
           <div className="space-y-4 text-2xl xl:text-3xl">
             <div className="flex items-center gap-5">
               <FaEnvelope className="text-highlight" />
-              <h2 className=''>nf2574@columbia.edu</h2>
+              <h2 className=''>nf2574[at]columbia[dot]edu</h2>
             </div>
-            <div className="flex items-center gap-5">
+            {/* <div className="flex items-center gap-5">
               <FaPhone className="text-highlight" />
-              <h2 className=''>(949)-771-4265</h2>
-            </div>
+              <h2 className=''>phone number</h2>
+            </div> */}
             <div className="flex items-center gap-5">
               <FaMapMarkerAlt className="text-highlight" />
               <h2 className=''>New York, NY</h2>
