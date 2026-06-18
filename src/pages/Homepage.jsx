@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RunnerCanvas from '../components/RunnerCanvas';
 import ZoneObject from '../components/ZoneObject';
+import TransitionRunner from '../components/TransitionRunner';
 import athleteSprite from '../assets/athlete-sprite.png';
 import courtyardTile from '../assets/courtyard-tile.png';
 
@@ -17,6 +18,7 @@ export default function Homepage() {
   const navigate = useNavigate();
   const [activeZone, setActiveZone] = useState(null);
   const [canvasSize, setCanvasSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [transitionTarget, setTransitionTarget] = useState(null);
   const activeZoneRef = useRef(null);
 
   // Redirect handheld / small screens to About
@@ -26,21 +28,29 @@ export default function Homepage() {
     }
   }, [navigate]);
 
-  // Enter key navigates when inside a zone
+  // Enter key triggers transition when inside a zone
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Enter' && activeZoneRef.current) {
-        navigate(`/${activeZoneRef.current.id}`);
+      if (e.key === 'Enter' && activeZoneRef.current && !transitionTarget) {
+        setTransitionTarget(`/${activeZoneRef.current.id}`);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [navigate]);
+  }, [transitionTarget]);
 
   const handleZoneChange = useCallback((zone) => {
     setActiveZone(zone);
     activeZoneRef.current = zone;
   }, []);
+
+  const handleNavigate = useCallback((path) => {
+    if (!transitionTarget) setTransitionTarget(path);
+  }, [transitionTarget]);
+
+  const handleTransitionComplete = useCallback(() => {
+    navigate(transitionTarget);
+  }, [navigate, transitionTarget]);
 
   const absoluteZones = zones.map((zone) => ({
     ...zone,
@@ -66,19 +76,23 @@ export default function Homepage() {
           key={zone.id}
           zone={zone}
           isActive={activeZone?.id === zone.id}
-          onClick={() => navigate(`/${zone.id}`)}
+          onClick={() => handleNavigate(`/${zone.id}`)}
         />
       ))}
 
       {/* Zone entry prompt */}
       {activeZone && (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 bg-black/70 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow-lg pointer-events-none animate-pulse">
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 bg-white/70 text-black px-6 py-3 rounded-xl text-sm font-semibold shadow-lg pointer-events-none animate-pulse">
           Press Enter or click to visit {activeZone.label}
         </div>
       )}
 
+      {transitionTarget && (
+        <TransitionRunner onComplete={handleTransitionComplete} />
+      )}
+
       {/* Controls hint */}
-      <div className="absolute bottom-4 right-4 z-20 text-xs text-white/50 pointer-events-none select-none">
+      <div className="absolute top-4 left-4 z-20 text-xs text-pimary pointer-events-none select-none">
         Move your mouse to explore
       </div>
     </div>
