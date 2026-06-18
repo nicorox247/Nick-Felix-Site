@@ -13,7 +13,7 @@ export default function SpriteCanvas({
   maxEase = 0.01,
   minEase = 0.001,
   lockInDelay = 600,
-  departureDelay = 600,
+  departureDelay = 300,
   onZoneChange,
 }) {
   const canvasRef = useRef(null);
