@@ -220,7 +220,7 @@ export default function ProjectCarousel({ projects }) {
           ))}
         </div>
       </div> */}
-        <div className="mt-8 text-center">
+        <div className="mt-16 pt-8 border-t border-muted/20 text-center">
           <Link
             to="/projects/all"
             className="button-secondary text-dark inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"

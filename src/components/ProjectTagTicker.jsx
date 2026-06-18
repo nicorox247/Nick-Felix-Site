@@ -3,17 +3,6 @@ import './ProjectDetail.css';
 
 export default function ProjectTagTicker({ tags = [] }) {
     // Repeat tags for smooth infinite scroll
-    const getStyle = (tag) => {
-      if (typeof tag !== 'string') return;
-      const lower = tag.toLowerCase();
-      if (lower.includes('react')) return 'bg-blue-400 text-dark';
-      if (lower.includes('python') || 
-      (lower.includes('java script'))) return 'bg-yellow-300 text-dark';
-      if (lower.includes('c++')) return 'bg-white text-dark';
-      if (lower.includes('vite')) return 'bg-purple-400 text-dark';
-      if (lower.includes('tailwind')) return 'bg-teal-400 text-dark';
-      return 'bg-green-400 text-dark';
-    };
 
       // Shuffle and repeat tags
       const repeatedTags = useMemo(() => {
@@ -36,8 +25,12 @@ export default function ProjectTagTicker({ tags = [] }) {
           {repeatedTags.map((tag, index) => (
             <div
               key={index}
-              className={`rounded-full px-4 py-1 text-sm font-medium shadow-sm ${getStyle(tag)}`}
-
+              className="rounded-full px-4 py-1 text-xs font-semibold border"
+              style={{
+                borderColor: 'var(--color-primary)',
+                color: 'var(--color-primary)',
+                background: 'color-mix(in srgb, var(--color-primary) 8%, transparent)',
+              }}
             >
               {tag}
             </div>
