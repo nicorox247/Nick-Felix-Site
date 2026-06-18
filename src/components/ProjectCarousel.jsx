@@ -97,8 +97,7 @@ export default function ProjectCarousel({ projects }) {
                   <div className="flex gap-4 items-center">
                     <Link
                       to={`/projects/${project.id}`}
-                      className="px-5 py-2.5 rounded-xl font-semibold text-sm transition-opacity hover:opacity-80"
-                      style={{ background: 'var(--color-primary)', color: 'var(--color-light)' }}
+                      className="button-primary px-5 py-2.5 rounded-xl font-semibold text-sm"
                     >
                       View Project →
                     </Link>
@@ -180,7 +179,7 @@ export default function ProjectCarousel({ projects }) {
       </div>
 
       {/* ── Bento grid ── */}
-      <div className="mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      {/* <div className="mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <p className="text-center text-xs font-semibold tracking-widest uppercase text-muted mb-1">All Projects</p>
         <h2 className="text-center text-2xl font-bold text-dark mb-8">Browse Everything</h2>
 
@@ -220,7 +219,18 @@ export default function ProjectCarousel({ projects }) {
             </Link>
           ))}
         </div>
-      </div>
+      </div> */}
+        <div className="mt-8 text-center">
+          <Link
+            to="/projects/all"
+            className="button-secondary text-dark inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
+          >
+            View All Projects
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </div>
     </div>
   );
 }

@@ -45,9 +45,18 @@
   @apply bg-gradient-to-r from-sky-500 to-sky-500 via-dark;
 }
 
+@utility bg-gradient-highlight-secondary{
+  @apply bg-gradient-to-r from-dark to-dark via-sky-500;
+}
+
 @utility button-primary {
   cursor: pointer;
   @apply text-light bg-gradient-primary hover:bg-gradient-highlight;
+}
+
+@utility button-secondary{
+  cursor: pointer;
+  @apply bg-sky-500 hover:bg-gradient-highlight-secondary hover:text-light;
 }
 
 @utility pdf-preview{
@@ -58,11 +67,6 @@
 
 @utility bg-gradient-accent{
   @apply bg-gradient-to-r from-slate-100 to-slate-100 via-light
-}
-
-@utility button-secondary{
-  cursor: pointer;
-  @apply bg-gradient-accent hover:bg-gradient-highlight hover:text-light;
 }
 
 @utility scrollbar-primary{

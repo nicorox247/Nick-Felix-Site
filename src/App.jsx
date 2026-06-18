@@ -11,6 +11,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Homepage from './pages/Homepage';
 import Projects from './pages/Projects';
+import AllProjects from './pages/AllProjects';
 import ProjectDetail from './pages/ProjectDetail';
 import Research from './pages/Research';
 import Resume from './pages/Resume';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/about" element={<Layout key={location.pathname}> <About /> </Layout>}/>
           <Route path="/contact" element={<Layout key={location.pathname}> <Contact /> </Layout>}/>
           <Route path="/projects" element={<Layout key={location.pathname}> <Projects /> </Layout>}/>
+          <Route path="/projects/all" element={<Layout key={location.pathname}> <AllProjects /> </Layout>}/>
           <Route path="/projects/:id" element={<Layout key={location.pathname}> <ProjectDetail /> </Layout>} />
           <Route path="/research" element={<Layout key={location.pathname}> <Research /> </Layout>}/>
           <Route path="/resume" element={<Layout key={location.pathname}> <Resume /> </Layout>}/>
